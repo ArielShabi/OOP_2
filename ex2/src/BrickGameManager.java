@@ -1,5 +1,4 @@
 
-import brick_strategies.BasicCollisionStrategy;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
@@ -8,9 +7,8 @@ import danogl.gui.*;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import game.RemoveGameObjectFunction;
+import game.BricksManager;
 import gameobjects.Ball;
-import gameobjects.Brick;
 import gameobjects.Paddle;
 
 import java.awt.*;
@@ -20,9 +18,7 @@ import java.util.Random;
 public class BrickGameManager extends GameManager {
     private static final float BALL_SPEED = 200;
     private static final float WALL_WIDTH = 10;
-    private static final float BRICK_HEIGHT = 15;
     private static final float BALL_RADIUS = 35;
-    private static final float BRICK_GAP = 2;
     private static final int PADDLE_WIDTH = 150;
     private static final float PADDLE_HEIGHT = 20;
     private static final int DEFAULT_NUMBER_OF_BRICK_ROWS = 6;
@@ -30,6 +26,7 @@ public class BrickGameManager extends GameManager {
     private Ball ball;
     private Vector2 windowDimensions;
     private WindowController windowController;
+    private BricksManager bricksManager;
 
 
     public BrickGameManager(String windowTitle, Vector2 windowDimensions) {
@@ -76,7 +73,7 @@ public class BrickGameManager extends GameManager {
                 imageReader.readImage("assets/ball.png", true);
 
         Sound collisionSound = soundReader.readSound("assets/blop.wav");
-        ball = new Ball(Vector2.ZERO, new Vector2(BALL_RADIUS,BALL_RADIUS), ballImage, collisionSound);
+        ball = new Ball(Vector2.ZERO, new Vector2(BALL_RADIUS, BALL_RADIUS), ballImage, collisionSound);
         float ballVelocityX = BALL_SPEED;
         float ballVelocityY = BALL_SPEED;
         Random rand = new Random();
@@ -105,28 +102,19 @@ public class BrickGameManager extends GameManager {
         gameObjects().addGameObject(paddle);
 
         // create bricks
-        int numberOfBricksPerRow = DEFAULT_NUMBER_OF_BRICKS_PER_ROW;
-        int numberOfBrickRows = DEFAULT_NUMBER_OF_BRICK_ROWS;
-
-
         Renderable brickRenderable = imageReader.readImage("assets/brick.png", false);
-        RemoveGameObjectFunction removeStaticBrick = this::removeStaticGameObject;
 
-        float brickWidth =
-                (windowDimensions.x() - WALL_WIDTH * 2 - ((numberOfBricksPerRow - 1) * BRICK_GAP)) / numberOfBricksPerRow;
+        bricksManager = new BricksManager(
+                new Vector2(WALL_WIDTH, WALL_WIDTH),
+                new Vector2(windowDimensions.x() - 2 * WALL_WIDTH, windowDimensions.y() - 2 * WALL_WIDTH),
+                null, this::addStaticGameObject, this::removeStaticGameObject);
 
-        for (int i = 0; i < numberOfBrickRows; i++) {
-            for (int j = 0; j < numberOfBricksPerRow; j++) {
-                GameObject brick = new Brick(
-                        new Vector2(WALL_WIDTH + j * (brickWidth + BRICK_GAP),
-                                WALL_WIDTH + i * (BRICK_HEIGHT + BRICK_GAP)),
-                        new Vector2(brickWidth, BRICK_HEIGHT),
-                        brickRenderable,
-                        new BasicCollisionStrategy(removeStaticBrick)
-                );
-                gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
-            }
-        }
+        gameObjects().addGameObject(bricksManager);
+
+        bricksManager.createBricks(DEFAULT_NUMBER_OF_BRICKS_PER_ROW, DEFAULT_NUMBER_OF_BRICK_ROWS,
+                brickRenderable);
+
+
     }
 
     @Override
@@ -144,15 +132,23 @@ public class BrickGameManager extends GameManager {
             prompt = "You lose!";
         }
 
-        if(!prompt.isEmpty()){
-            prompt+=" Play again?";
-            if(this.windowController.openYesNoDialog(prompt)){
+        if (!bricksManager.hasBricks()) {
+            prompt = "You win!";
+        }
+
+        if (!prompt.isEmpty()) {
+            prompt += " Play again?";
+            if (this.windowController.openYesNoDialog(prompt)) {
                 windowController.resetGame();
-            }
-            else{
+            } else {
                 windowController.closeWindow();
             }
         }
+
+    }
+
+    private void addStaticGameObject(GameObject gameObject) {
+        gameObjects().addGameObject(gameObject, Layer.STATIC_OBJECTS);
     }
 
     private void removeStaticGameObject(GameObject gameObject) {
