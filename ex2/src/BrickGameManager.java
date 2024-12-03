@@ -23,6 +23,7 @@ public class BrickGameManager extends GameManager {
     private static final float PADDLE_HEIGHT = 20;
     private static final int DEFAULT_NUMBER_OF_BRICK_ROWS = 6;
     private static final int DEFAULT_NUMBER_OF_BRICKS_PER_ROW = 5;
+    private static final float DELETION_HEIGHT_THRESHOLD = 50;
     private Ball ball;
     private Vector2 windowDimensions;
     private WindowController windowController;
@@ -110,8 +111,16 @@ public class BrickGameManager extends GameManager {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-
         checkForGameEnd();
+        removeFallenItems();
+    }
+
+    private void removeFallenItems() {
+        for (GameObject gameObject : gameObjects().objectsInLayer(Layer.DEFAULT)) {
+                if (gameObject.getCenter().y() > this.windowDimensions.y() + DELETION_HEIGHT_THRESHOLD) {
+                    gameObjects().removeGameObject(gameObject);
+                }
+        }
     }
 
     private void checkForGameEnd() {
