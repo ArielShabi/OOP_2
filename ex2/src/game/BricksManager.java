@@ -1,6 +1,6 @@
 package game;
 
-import brick_strategies.BasicCollisionStrategy;
+import brick_strategies.BricksStrategyFactory;
 import danogl.GameObject;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
@@ -11,6 +11,7 @@ public class BricksManager extends GameObject {
     private static final float BRICK_GAP = 2;
     private final AddGameObjectFunction addBrickFunction;
     private final RemoveGameObjectFunction removeBrickFunction;
+    private final BricksStrategyFactory bricksStrategyFactory;
 
     private Brick[] bricks;
     private int bricksCounter = 0;
@@ -18,7 +19,7 @@ public class BricksManager extends GameObject {
     /**
      * Construct a new GameObject instance.
      *
-     * @param topLeftCorner Position of the object, in window coordinates (pixels). Note that (0,0) is the
+     * @param topLeftCorner Position of the object, in window coordinates (pixel s). Note that (0,0) is the
      *                      top-left corner of the window.
      * @param dimensions    Width and height in window coordinates.
      * @param renderable    The renderable representing the object. Can be null, in which case the GameObject
@@ -31,6 +32,7 @@ public class BricksManager extends GameObject {
 
         this.addBrickFunction = addBrickFunction;
         this.removeBrickFunction = removeBrickFunction;
+        this.bricksStrategyFactory = new BricksStrategyFactory();
     }
 
 
@@ -44,10 +46,10 @@ public class BricksManager extends GameObject {
             for (int j = 0; j < numberOfBricksPerRow; j++) {
                 Brick brick = new Brick(
                         new Vector2(this.getTopLeftCorner().x() + j * (brickWidth + BRICK_GAP),
-                                +this.getTopLeftCorner().y() + i * (BRICK_HEIGHT + BRICK_GAP)),
+                                this.getTopLeftCorner().y() + i * (BRICK_HEIGHT + BRICK_GAP)),
                         new Vector2(brickWidth, BRICK_HEIGHT),
                         brickRenderable,
-                        new BasicCollisionStrategy(this::removeBrick)
+                        this.bricksStrategyFactory.generateCollisionStrategy(this::removeBrick)
                 );
 
                 bricks[i * numberOfBricksPerRow + j] = brick;
