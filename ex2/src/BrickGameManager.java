@@ -92,7 +92,7 @@ public class BrickGameManager extends GameManager {
         Renderable brickRenderable = imageReader.readImage("assets/brick.png", false);
 
         BricksStrategyFactory bricksStrategyFactory = new BricksStrategyFactory(
-                this.gameObjects()::addGameObject, ballFactory);
+                this.gameObjects()::addGameObject, ballFactory, imageReader, ball);
 
         bricksManager = new BricksManager(
                 new Vector2(WALL_WIDTH, WALL_WIDTH),
@@ -155,7 +155,5 @@ public class BrickGameManager extends GameManager {
         GameManager game = new BrickGameManager("Bouncing Ball", new Vector2(700, 500));
 
         game.run();
-
-        System.out.println("Hello World" + game);
     }
 }
