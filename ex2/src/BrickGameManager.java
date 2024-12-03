@@ -151,8 +151,8 @@ public class BrickGameManager extends GameManager {
         gameObjects().addGameObject(gameObject, Layer.STATIC_OBJECTS);
     }
 
-    private void removeStaticGameObject(GameObject gameObject) {
-        gameObjects().removeGameObject(gameObject, Layer.STATIC_OBJECTS);
+    private boolean removeStaticGameObject(GameObject gameObject) {
+        return gameObjects().removeGameObject(gameObject, Layer.STATIC_OBJECTS);
     }
 
     public static void main(String[] args) {

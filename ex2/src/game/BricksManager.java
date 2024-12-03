@@ -64,9 +64,14 @@ public class BricksManager extends GameObject {
         return false;
     }
 
-    private void removeBrick(GameObject gameObject) {
-        removeBrickFunction.run(gameObject);
-        bricksCounter--;
+    private boolean removeBrick(GameObject gameObject) {
+        boolean removed = removeBrickFunction.run(gameObject);
+
+        if (removed) {
+            bricksCounter--;
+        }
+
+        return removed;
     }
 
     public boolean hasBricks() {
