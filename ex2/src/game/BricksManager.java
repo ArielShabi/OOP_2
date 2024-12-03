@@ -2,16 +2,19 @@ package game;
 
 import brick_strategies.BricksStrategyFactory;
 import danogl.GameObject;
+import danogl.collisions.Layer;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import gameobjects.Brick;
 
-public class BricksManager extends GameObject {
+public class BricksManager {
     private static final float BRICK_HEIGHT = 15;
     private static final float BRICK_GAP = 2;
     private final AddGameObjectFunction addBrickFunction;
     private final RemoveGameObjectFunction removeBrickFunction;
     private final BricksStrategyFactory bricksStrategyFactory;
+    private final Vector2 topLeftCorner;
+    private final Vector2 bricksContainerDimensions;
 
     private Brick[] bricks;
     private int bricksCounter = 0;
@@ -22,17 +25,16 @@ public class BricksManager extends GameObject {
      * @param topLeftCorner Position of the object, in window coordinates (pixel s). Note that (0,0) is the
      *                      top-left corner of the window.
      * @param dimensions    Width and height in window coordinates.
-     * @param renderable    The renderable representing the object. Can be null, in which case the GameObject
-     *                      will not be rendered.
      */
-    public BricksManager(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
+    public BricksManager(Vector2 topLeftCorner, Vector2 dimensions,
                          AddGameObjectFunction addBrickFunction,
-                         RemoveGameObjectFunction removeBrickFunction) {
-        super(topLeftCorner, dimensions, renderable);
-
+                         RemoveGameObjectFunction removeBrickFunction,
+                         BricksStrategyFactory bricksStrategyFactory) {
+        this.topLeftCorner = topLeftCorner;
+        this.bricksContainerDimensions = dimensions;
         this.addBrickFunction = addBrickFunction;
         this.removeBrickFunction = removeBrickFunction;
-        this.bricksStrategyFactory = new BricksStrategyFactory();
+        this.bricksStrategyFactory = bricksStrategyFactory;
     }
 
 
@@ -40,13 +42,13 @@ public class BricksManager extends GameObject {
         this.bricks = new Brick[numberOfBricksPerRow * numberOfBrickRows];
 
         float brickWidth =
-                (getDimensions().x() - ((numberOfBricksPerRow - 1) * BRICK_GAP)) / numberOfBricksPerRow;
+                (this.bricksContainerDimensions.x() - ((numberOfBricksPerRow - 1) * BRICK_GAP)) / numberOfBricksPerRow;
 
         for (int i = 0; i < numberOfBrickRows; i++) {
             for (int j = 0; j < numberOfBricksPerRow; j++) {
                 Brick brick = new Brick(
-                        new Vector2(this.getTopLeftCorner().x() + j * (brickWidth + BRICK_GAP),
-                                this.getTopLeftCorner().y() + i * (BRICK_HEIGHT + BRICK_GAP)),
+                        new Vector2(this.topLeftCorner.x() + j * (brickWidth + BRICK_GAP),
+                                this.topLeftCorner.y() + i * (BRICK_HEIGHT + BRICK_GAP)),
                         new Vector2(brickWidth, BRICK_HEIGHT),
                         brickRenderable,
                         this.bricksStrategyFactory.generateCollisionStrategy(this::removeBrick)
@@ -54,14 +56,9 @@ public class BricksManager extends GameObject {
 
                 bricks[i * numberOfBricksPerRow + j] = brick;
                 bricksCounter++;
-                addBrickFunction.run(brick);
+                addBrickFunction.run(brick, Layer.STATIC_OBJECTS);
             }
         }
-    }
-
-    @Override
-    public boolean shouldCollideWith(GameObject other) {
-        return false;
     }
 
     private boolean removeBrick(GameObject gameObject) {

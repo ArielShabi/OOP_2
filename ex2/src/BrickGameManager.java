@@ -1,4 +1,7 @@
 
+import ball.BallFactory;
+import ball.BallType;
+import brick_strategies.BricksStrategyFactory;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
@@ -12,13 +15,10 @@ import gameobjects.Ball;
 import gameobjects.Paddle;
 
 import java.awt.*;
-import java.util.Random;
 
 
 public class BrickGameManager extends GameManager {
-    private static final float BALL_SPEED = 200;
     private static final float WALL_WIDTH = 10;
-    private static final float BALL_RADIUS = 35;
     private static final int PADDLE_WIDTH = 150;
     private static final float PADDLE_HEIGHT = 20;
     private static final int DEFAULT_NUMBER_OF_BRICK_ROWS = 6;
@@ -69,23 +69,9 @@ public class BrickGameManager extends GameManager {
 
 
         // Creating ball
-        Renderable ballImage =
-                imageReader.readImage("assets/ball.png", true);
+        BallFactory ballFactory = new BallFactory(imageReader, soundReader);
 
-        Sound collisionSound = soundReader.readSound("assets/blop.wav");
-        ball = new Ball(Vector2.ZERO, new Vector2(BALL_RADIUS, BALL_RADIUS), ballImage, collisionSound);
-        float ballVelocityX = BALL_SPEED;
-        float ballVelocityY = BALL_SPEED;
-        Random rand = new Random();
-
-        if (rand.nextBoolean()) {
-            ballVelocityX = -ballVelocityX;
-        }
-        if (rand.nextBoolean()) {
-            ballVelocityY = -ballVelocityY;
-        }
-
-        ball.setVelocity(new Vector2(ballVelocityX, ballVelocityY));
+        ball = ballFactory.createBall(BallType.MAIN);
         Vector2 windowDimensions = this.windowDimensions;
         ball.setCenter(windowDimensions.mult(0.5f));
         gameObjects().addGameObject(ball);
@@ -104,12 +90,16 @@ public class BrickGameManager extends GameManager {
         // create bricks
         Renderable brickRenderable = imageReader.readImage("assets/brick.png", false);
 
+        BricksStrategyFactory bricksStrategyFactory = new BricksStrategyFactory(
+                this.gameObjects()::addGameObject, ballFactory);
+
         bricksManager = new BricksManager(
                 new Vector2(WALL_WIDTH, WALL_WIDTH),
                 new Vector2(windowDimensions.x() - 2 * WALL_WIDTH, windowDimensions.y() - 2 * WALL_WIDTH),
-                null, this::addStaticGameObject, this::removeStaticGameObject);
-
-        gameObjects().addGameObject(bricksManager);
+                this.gameObjects()::addGameObject,
+                this::removeStaticGameObject,
+                bricksStrategyFactory
+        );
 
         bricksManager.createBricks(DEFAULT_NUMBER_OF_BRICKS_PER_ROW, DEFAULT_NUMBER_OF_BRICK_ROWS,
                 brickRenderable);
@@ -145,10 +135,6 @@ public class BrickGameManager extends GameManager {
             }
         }
 
-    }
-
-    private void addStaticGameObject(GameObject gameObject) {
-        gameObjects().addGameObject(gameObject, Layer.STATIC_OBJECTS);
     }
 
     private boolean removeStaticGameObject(GameObject gameObject) {
