@@ -4,8 +4,9 @@ import components.BallCollisionCounterComponent;
 import danogl.GameObject;
 import danogl.gui.ImageReader;
 import danogl.gui.rendering.Renderable;
-import game.RemoveGameObjectFunction;
 import gameobjects.Ball;
+
+import java.util.function.Consumer;
 
 public class TurboCollisionStrategy extends BasicCollisionStrategy {
     private final Ball ballToTurbo;
@@ -14,7 +15,7 @@ public class TurboCollisionStrategy extends BasicCollisionStrategy {
     private final Renderable turboRenderable;
     private Renderable prevRenderable;
 
-    public TurboCollisionStrategy(RemoveGameObjectFunction removeGameObjectFunction,
+    public TurboCollisionStrategy(Consumer<GameObject> removeGameObjectFunction,
                                   Ball ballToTurbo, ImageReader imageReader) {
         super(removeGameObjectFunction);
         turboRenderable = imageReader.readImage("assets/redball.png", true);

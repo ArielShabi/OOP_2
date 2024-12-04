@@ -58,7 +58,6 @@ public class HeartsManager {
             heartscounter++;
             updateNumericHearts();
         }
-        System.out.println("Heart added. You have " + heartscounter + " hearts now");
         return heartscounter;
     }
 

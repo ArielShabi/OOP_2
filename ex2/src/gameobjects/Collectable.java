@@ -3,11 +3,14 @@ package gameobjects;
 import collected_strategy.CollectedStrategy;
 import danogl.GameObject;
 import danogl.collisions.Collision;
+import danogl.collisions.Layer;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import game.RemoveGameObjectFunction;
 
 public class Collectable extends GameObject {
     public final CollectedStrategy collectedStrategy;
+    private final RemoveGameObjectFunction removeCollectableFunction;
     public final GameObject originalPaddle;
 
     /**
@@ -22,9 +25,10 @@ public class Collectable extends GameObject {
      * @param collectedStrategy The strategy to be executed when the object is collected.
      */
     public Collectable(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
-                       CollectedStrategy collectedStrategy, GameObject originalPaddle) {
+                       CollectedStrategy collectedStrategy, RemoveGameObjectFunction removeCollectableFunction, GameObject originalPaddle) {
         super(topLeftCorner, dimensions, renderable);
         this.collectedStrategy = collectedStrategy;
+        this.removeCollectableFunction = removeCollectableFunction;
         this.originalPaddle = originalPaddle;
     }
 
@@ -32,6 +36,7 @@ public class Collectable extends GameObject {
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
         collectedStrategy.collectOnCollision(other, this);
+        removeCollectableFunction.run(this, Layer.DEFAULT);
     }
 
     // collide only with original paddle

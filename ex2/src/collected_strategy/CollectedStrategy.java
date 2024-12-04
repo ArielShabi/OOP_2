@@ -5,5 +5,5 @@ import gameobjects.Collectable;
 
 public interface CollectedStrategy {
 
-    public void collectOnCollision(GameObject mainObj, Collectable toCollect);
+    void collectOnCollision(GameObject mainObj, Collectable toCollect);
 }
