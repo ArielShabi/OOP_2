@@ -1,6 +1,7 @@
 package game;
 
 import brick_strategies.BricksStrategyFactory;
+import brick_strategies.CollisionStrategy;
 import danogl.GameObject;
 import danogl.collisions.Layer;
 import danogl.gui.rendering.Renderable;
@@ -11,7 +12,7 @@ public class BricksManager {
     private static final float BRICK_HEIGHT = 15;
     private static final float BRICK_GAP = 2;
     private final AddGameObjectFunction addBrickFunction;
-    private final RemoveGameObjectFunction removeBrickFunction;
+    private final RemoveGameObjectFunction removeGameObjectFunction;
     private final BricksStrategyFactory bricksStrategyFactory;
     private final Vector2 topLeftCorner;
     private final Vector2 bricksContainerDimensions;
@@ -28,12 +29,12 @@ public class BricksManager {
      */
     public BricksManager(Vector2 topLeftCorner, Vector2 dimensions,
                          AddGameObjectFunction addBrickFunction,
-                         RemoveGameObjectFunction removeBrickFunction,
+                         RemoveGameObjectFunction removeGameObjectFunction,
                          BricksStrategyFactory bricksStrategyFactory) {
         this.topLeftCorner = topLeftCorner;
         this.bricksContainerDimensions = dimensions;
         this.addBrickFunction = addBrickFunction;
-        this.removeBrickFunction = removeBrickFunction;
+        this.removeGameObjectFunction = removeGameObjectFunction;
         this.bricksStrategyFactory = bricksStrategyFactory;
     }
 
@@ -46,13 +47,16 @@ public class BricksManager {
 
         for (int i = 0; i < numberOfBrickRows; i++) {
             for (int j = 0; j < numberOfBricksPerRow; j++) {
+                CollisionStrategy brickCollisionStrategy =
+                        this.bricksStrategyFactory.generateCollisionStrategy(this::removeBrick);
+
                 Brick brick = new Brick(
                         new Vector2(this.topLeftCorner.x() + j * (brickWidth + BRICK_GAP),
                                 this.topLeftCorner.y() + i * (BRICK_HEIGHT + BRICK_GAP)),
                         new Vector2(brickWidth, BRICK_HEIGHT),
                         brickRenderable,
-                        this.bricksStrategyFactory.generateCollisionStrategy(this::removeBrick)
-                );
+                        brickCollisionStrategy
+                        );
 
                 bricks[i * numberOfBricksPerRow + j] = brick;
                 bricksCounter++;
@@ -62,7 +66,7 @@ public class BricksManager {
     }
 
     private boolean removeBrick(GameObject gameObject) {
-        boolean removed = removeBrickFunction.run(gameObject);
+        boolean removed = removeGameObjectFunction.run(gameObject, Layer.STATIC_OBJECTS);
 
         if (removed) {
             bricksCounter--;

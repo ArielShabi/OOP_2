@@ -4,12 +4,18 @@ import danogl.GameObject;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import game.Config;
+import paddle.PaddleType;
 
 import java.awt.event.KeyEvent;
+
+
 
 public class Paddle extends GameObject {
     public static final float MOVEMENT_SPEED = 300;
     private final UserInputListener inputListener;
+    private final Vector2 windowDimensions;
+    public PaddleType paddleType = PaddleType.Main;
 
     /**
      * Construct a new GameObject instance.
@@ -22,15 +28,16 @@ public class Paddle extends GameObject {
      * @param inputListener The input listener that will be used to control the paddle.
      */
     public Paddle(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
-                  UserInputListener inputListener) {
+                  UserInputListener inputListener, Vector2 windowDimensions) {
+
         super(topLeftCorner, dimensions, renderable);
         this.inputListener = inputListener;
+        this.windowDimensions = windowDimensions;
     }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-
         Vector2 movementDirection = Vector2.ZERO;
 
         if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
@@ -41,11 +48,11 @@ public class Paddle extends GameObject {
         }
 
 
-        if(getTopLeftCorner().x() <= 0){
+        if(this.getTopLeftCorner().x() <= 2*Config.WALL_WIDTH){
             if(movementDirection.x() < 0){
                 movementDirection = Vector2.ZERO;
             }
-        } else if (this.getTopLeftCorner().x()+this.getDimensions().x()>= 700){
+        } else if (this.getTopLeftCorner().x()+this.getDimensions().x()>= windowDimensions.x()-2*Config.WALL_WIDTH){
             if(movementDirection.x() > 0){
                 movementDirection = Vector2.ZERO;
             }

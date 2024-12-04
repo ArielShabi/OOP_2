@@ -6,8 +6,9 @@ import danogl.GameObject;
 import danogl.collisions.Layer;
 import danogl.util.Vector2;
 import game.AddGameObjectFunction;
-import game.RemoveGameObjectFunction;
 import gameobjects.Ball;
+
+import java.util.function.Consumer;
 
 public class PuckCollisionStrategy extends BasicCollisionStrategy {
 
@@ -15,7 +16,7 @@ public class PuckCollisionStrategy extends BasicCollisionStrategy {
     private final AddGameObjectFunction addGameObjectFunction;
     private final BallFactory ballFactory;
 
-    public PuckCollisionStrategy(RemoveGameObjectFunction removeGameObjectFunction,
+    public PuckCollisionStrategy(Consumer<GameObject> removeGameObjectFunction,
                                  AddGameObjectFunction addGameObjectFunction, BallFactory ballFactory) {
         super(removeGameObjectFunction);
         this.addGameObjectFunction = addGameObjectFunction;
