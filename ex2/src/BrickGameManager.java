@@ -25,7 +25,6 @@ public class BrickGameManager extends GameManager {
     private static final int DEFAULT_NUMBER_OF_BRICK_ROWS = 6;
     private static final int DEFAULT_NUMBER_OF_BRICKS_PER_ROW = 5;
     private static final float DELETION_HEIGHT_THRESHOLD = 50;
-    private static final int HEART_SIZE = 20;
     private Ball ball;
     private Vector2 windowDimensions;
     private WindowController windowController;
