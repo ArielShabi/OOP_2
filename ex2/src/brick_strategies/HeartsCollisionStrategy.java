@@ -42,7 +42,7 @@ public class HeartsCollisionStrategy extends BasicCollisionStrategy {
         super.onCollision(a, b);
 
         Renderable heartImage = imageReader.readImage("assets/heart.png", true);
-        CollectedStrategy collectedStrategy = new HeartCollectedStrategy(removeCollectableFunction, addGameObjectFunction, addHeartFunction, HEART_SIZE);
+        CollectedStrategy collectedStrategy = new HeartCollectedStrategy(removeCollectableFunction, addHeartFunction);
         Collectable heart = new Collectable(Vector2.ZERO, new Vector2(HEART_SIZE, HEART_SIZE),
                 heartImage, collectedStrategy, heartCollector);
 

@@ -26,12 +26,11 @@ public class BrickGameManager extends GameManager {
     private static final int DEFAULT_NUMBER_OF_BRICKS_PER_ROW = 5;
     private static final float DELETION_HEIGHT_THRESHOLD = 50;
     private static final int HEART_SIZE = 20;
-    private ImageReader imageReader;
     private Ball ball;
     private Vector2 windowDimensions;
     private WindowController windowController;
     private BricksManager bricksManager;
-    private HeartsManager heartsManager;;
+    private HeartsManager heartsManager;
 
 
     public BrickGameManager(String windowTitle, Vector2 windowDimensions) {
@@ -44,7 +43,6 @@ public class BrickGameManager extends GameManager {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
         this.windowController = windowController;
         this.windowDimensions = windowController.getWindowDimensions();
-        this.imageReader = imageReader;
         this.heartsManager = new HeartsManager(this.gameObjects()::removeGameObject, this.gameObjects()::addGameObject,imageReader, windowDimensions);
 
         // Create background

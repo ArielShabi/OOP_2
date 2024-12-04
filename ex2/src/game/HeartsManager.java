@@ -16,9 +16,9 @@ public class HeartsManager {
     private final GameObject[] hearts;
     private final RemoveGameObjectFunction removeGameObjectFunction;
     private final AddGameObjectFunction addGameObjectFunction;
-    private ImageReader imageReader;
+    private final ImageReader imageReader;
     private final float HEART_SIZE = 20;
-    private Vector2 windowDimensions;
+    private final Vector2 windowDimensions;
     private final GameObject numericCount;
 
 

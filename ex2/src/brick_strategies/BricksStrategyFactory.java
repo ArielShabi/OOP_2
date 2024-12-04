@@ -7,9 +7,7 @@ import danogl.util.Counter;
 import danogl.util.Vector2;
 import game.AddGameObjectFunction;
 import game.RemoveGameObjectFunction;
-import gameobjects.Paddle;
 import paddle.PaddleFactory;
-
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -23,7 +21,7 @@ public class BricksStrategyFactory {
     private final Vector2 windowDimensions;
     private final Counter extraPaddleCounter;
     private final ImageReader imageReader;
-    private Supplier<Integer> addHeartFunction;
+    private final Supplier<Integer> addHeartFunction;
     private final GameObject heartCollector;
     private final int HEART_SIZE;
 

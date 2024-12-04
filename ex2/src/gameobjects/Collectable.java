@@ -1,6 +1,5 @@
 package gameobjects;
 
-import brick_strategies.CollisionStrategy;
 import collected_strategy.CollectedStrategy;
 import danogl.GameObject;
 import danogl.collisions.Collision;
