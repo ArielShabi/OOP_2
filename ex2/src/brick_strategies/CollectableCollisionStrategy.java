@@ -19,7 +19,7 @@ public class CollectableCollisionStrategy extends BasicCollisionStrategy {
     private final Renderable renderable;
     private final CollectedStrategy collectedStrategy;
     private final GameObject collectorObject;
-    private RemoveGameObjectFunction removeCollectableFunction;
+    private final RemoveGameObjectFunction removeCollectableFunction;
 
     public CollectableCollisionStrategy(Consumer<GameObject> removeGameObjectFunction,
                                         AddGameObjectFunction addGameObjectFunction,

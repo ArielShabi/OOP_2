@@ -94,7 +94,7 @@ public class BrickGameManager extends GameManager {
         BricksStrategyFactory bricksStrategyFactory = new BricksStrategyFactory(
                 this.gameObjects()::addGameObject, this.gameObjects()::removeGameObject, ballFactory,
                 paddleFactory, windowDimensions, imageReader, heartsManager::addHeart, paddle,
-                this.ball, HEART_SIZE);
+                this.ball);
 
         bricksManager = new BricksManager(
                 new Vector2(WALL_WIDTH, WALL_WIDTH),
