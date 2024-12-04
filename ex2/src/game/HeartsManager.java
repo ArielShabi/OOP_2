@@ -58,12 +58,10 @@ public class HeartsManager {
             heartscounter++;
             updateNumericHearts();
         }
-        System.out.println("Heart added. You have " + heartscounter + " hearts now");
         return heartscounter;
     }
 
     private void updateNumericHearts() {
-        // Added colors
         TextRenderable textRenderable = new TextRenderable(String.valueOf(heartscounter));
         switch(heartscounter){
             case 1:
@@ -72,8 +70,7 @@ public class HeartsManager {
             case 2:
                 textRenderable.setColor(Color.YELLOW);
                 break;
-            case 3:
-            case 4:
+            default:
                 textRenderable.setColor(Color.GREEN);
                 break;
         }

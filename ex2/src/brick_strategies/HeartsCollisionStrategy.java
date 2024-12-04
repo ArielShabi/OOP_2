@@ -36,7 +36,7 @@ public class HeartsCollisionStrategy extends BasicCollisionStrategy {
         this.heartCollector = heartCollector;
         this.HEART_SIZE = HEART_SIZE;
     }
-    // a = brick, b = ball
+
     @Override
     public void onCollision(GameObject a, GameObject b) {
         super.onCollision(a, b);

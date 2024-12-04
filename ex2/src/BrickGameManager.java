@@ -1,4 +1,3 @@
-
 import ball.BallFactory;
 import ball.BallType;
 import brick_strategies.BricksStrategyFactory;
@@ -11,6 +10,7 @@ import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import game.BricksManager;
+import game.Config;
 import game.HeartsManager;
 import game.Utils;
 import gameobjects.Ball;
@@ -21,7 +21,6 @@ import java.awt.*;
 
 
 public class BrickGameManager extends GameManager {
-    private static final float WALL_WIDTH = 10;
     private static final int DEFAULT_NUMBER_OF_BRICK_ROWS = 6;
     private static final int DEFAULT_NUMBER_OF_BRICKS_PER_ROW = 5;
     private static final float DELETION_HEIGHT_THRESHOLD = 50;
@@ -57,18 +56,18 @@ public class BrickGameManager extends GameManager {
         // Create walls
         Renderable wallRenderable = new RectangleRenderable(Color.pink);
         Vector2[] wallPositions = {Vector2.ZERO,
-                new Vector2(this.windowDimensions.x() - WALL_WIDTH, 0)};
+                new Vector2(this.windowDimensions.x() - Config.WALL_WIDTH, 0)};
 
         for (int i = 0; i < 2; i++) {
             GameObject wall =
-                    new GameObject(wallPositions[i], new Vector2(WALL_WIDTH,
+                    new GameObject(wallPositions[i], new Vector2(Config.WALL_WIDTH,
                             this.windowDimensions.y()), wallRenderable);
 
             this.gameObjects().addGameObject(wall, Layer.STATIC_OBJECTS);
         }
 
         GameObject ceiling = new GameObject(Vector2.ZERO,
-                new Vector2(this.windowDimensions.x(), WALL_WIDTH), wallRenderable);
+                new Vector2(this.windowDimensions.x(), Config.WALL_WIDTH), wallRenderable);
 
         this.gameObjects().addGameObject(ceiling, Layer.STATIC_OBJECTS);
 
@@ -82,7 +81,7 @@ public class BrickGameManager extends GameManager {
         gameObjects().addGameObject(ball);
 
         // Creating paddle
-        PaddleFactory paddleFactory = new PaddleFactory(imageReader, inputListener);
+        PaddleFactory paddleFactory = new PaddleFactory(imageReader, inputListener, windowDimensions);
         GameObject paddle = paddleFactory.createPaddle(PaddleType.Main);
         paddle.setCenter(new Vector2(windowDimensions.x() / 2, (int) windowDimensions.y() - 30));
         gameObjects().addGameObject(paddle);
@@ -96,8 +95,8 @@ public class BrickGameManager extends GameManager {
                 paddleFactory, windowDimensions, imageReader, heartsManager::addHeart, paddle, HEART_SIZE);
 
         bricksManager = new BricksManager(
-                new Vector2(WALL_WIDTH, WALL_WIDTH),
-                new Vector2(windowDimensions.x() - 2 * WALL_WIDTH, windowDimensions.y() - 2 * WALL_WIDTH),
+                new Vector2(Config.WALL_WIDTH, Config.WALL_WIDTH),
+                new Vector2(windowDimensions.x() - 2 * Config.WALL_WIDTH, windowDimensions.y() - 2 * Config.WALL_WIDTH),
                 this.gameObjects()::addGameObject,
                 this.gameObjects()::removeGameObject,
                 bricksStrategyFactory
@@ -105,11 +104,6 @@ public class BrickGameManager extends GameManager {
 
         bricksManager.createBricks(DEFAULT_NUMBER_OF_BRICKS_PER_ROW, DEFAULT_NUMBER_OF_BRICK_ROWS,
                 brickRenderable);
-
-        // create hearts
-
-
-
     }
 
 
@@ -137,7 +131,6 @@ public class BrickGameManager extends GameManager {
                 this.resetBallPosition();
                 return;
             } else {
-                // finished
                 prompt = "You lose!";
             }
         }
