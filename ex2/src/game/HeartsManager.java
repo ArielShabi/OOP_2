@@ -10,8 +10,8 @@ import danogl.util.Vector2;
 import java.awt.*;
 
 public class HeartsManager {
-    private final int INITIAL_HEARTS = 3;
-    private int heartscounter;
+    private final static int INITIAL_HEARTS = 3;
+    private int heartsCounter;
     private final int MAX_HEARTS = 4;
     private final GameObject[] hearts;
     private final RemoveGameObjectFunction removeGameObjectFunction;
@@ -41,29 +41,29 @@ public class HeartsManager {
     }
 
     public void removeHeart() {
-        heartscounter--;
-        removeGameObjectFunction.run(hearts[this.heartscounter], Layer.UI);
-        hearts[this.heartscounter]=null;
+        heartsCounter--;
+        removeGameObjectFunction.run(hearts[this.heartsCounter], Layer.UI);
+        hearts[this.heartsCounter]=null;
         updateNumericHearts();
     }
 
     public int addHeart() {
-        if (heartscounter < MAX_HEARTS) {
+        if (heartsCounter < MAX_HEARTS) {
             Renderable heartRenderable = imageReader.readImage("assets/heart.png", true);
             GameObject heart = new GameObject(Vector2.ZERO, new Vector2(HEART_SIZE, HEART_SIZE),
                     heartRenderable);
-            heart.setCenter(new Vector2(4*HEART_SIZE + this.heartscounter * HEART_SIZE,this.windowDimensions.y()- HEART_SIZE));
+            heart.setCenter(new Vector2(4*HEART_SIZE + this.heartsCounter * HEART_SIZE,this.windowDimensions.y()- HEART_SIZE));
             addGameObjectFunction.run(heart, Layer.UI);
-            hearts[this.heartscounter] = heart;
-            heartscounter++;
+            hearts[this.heartsCounter] = heart;
+            heartsCounter++;
             updateNumericHearts();
         }
-        return heartscounter;
+        return heartsCounter;
     }
 
     private void updateNumericHearts() {
-        TextRenderable textRenderable = new TextRenderable(String.valueOf(heartscounter));
-        switch(heartscounter){
+        TextRenderable textRenderable = new TextRenderable(String.valueOf(heartsCounter));
+        switch(heartsCounter){
             case 1:
                 textRenderable.setColor(Color.RED);
                 break;
@@ -77,8 +77,8 @@ public class HeartsManager {
         this.numericCount.renderer().setRenderable(textRenderable);
     }
 
-    public int getHeartscounter() {
-        return heartscounter;
+    public int getHeartsCounter() {
+        return heartsCounter;
     }
 
 }

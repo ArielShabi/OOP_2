@@ -126,7 +126,7 @@ public class BrickGameManager extends GameManager {
         float ballY = ball.getCenter().y();
         String prompt = "";
         if (ballY > this.windowDimensions.y()) {
-            if (this.heartsManager.getHeartscounter() - 1 > 0) {
+            if (this.heartsManager.getHeartsCounter() - 1 > 0) {
                 this.heartsManager.removeHeart();
                 this.resetBallPosition();
                 return;
