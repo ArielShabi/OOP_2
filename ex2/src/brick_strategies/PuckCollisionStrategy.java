@@ -9,13 +9,15 @@ import game.AddGameObjectFunction;
 import game.RemoveGameObjectFunction;
 import gameobjects.Ball;
 
+import java.util.function.Consumer;
+
 public class PuckCollisionStrategy extends BasicCollisionStrategy {
 
     private final static int PUCK_TO_CREATE = 2;
     private final AddGameObjectFunction addGameObjectFunction;
     private final BallFactory ballFactory;
 
-    public PuckCollisionStrategy(RemoveGameObjectFunction removeGameObjectFunction,
+    public PuckCollisionStrategy(Consumer<GameObject> removeGameObjectFunction,
                                  AddGameObjectFunction addGameObjectFunction, BallFactory ballFactory) {
         super(removeGameObjectFunction);
         this.addGameObjectFunction = addGameObjectFunction;

@@ -11,23 +11,27 @@ import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import game.BricksManager;
+import game.HeartsManager;
+import game.Utils;
 import gameobjects.Ball;
-import gameobjects.Paddle;
+import paddle.PaddleFactory;
+import paddle.PaddleType;
 
 import java.awt.*;
 
 
 public class BrickGameManager extends GameManager {
     private static final float WALL_WIDTH = 10;
-    private static final int PADDLE_WIDTH = 150;
-    private static final float PADDLE_HEIGHT = 20;
     private static final int DEFAULT_NUMBER_OF_BRICK_ROWS = 6;
     private static final int DEFAULT_NUMBER_OF_BRICKS_PER_ROW = 5;
     private static final float DELETION_HEIGHT_THRESHOLD = 50;
+    private static final int HEART_SIZE = 20;
+    private ImageReader imageReader;
     private Ball ball;
     private Vector2 windowDimensions;
     private WindowController windowController;
     private BricksManager bricksManager;
+    private HeartsManager heartsManager;;
 
 
     public BrickGameManager(String windowTitle, Vector2 windowDimensions) {
@@ -40,8 +44,10 @@ public class BrickGameManager extends GameManager {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
         this.windowController = windowController;
         this.windowDimensions = windowController.getWindowDimensions();
+        this.imageReader = imageReader;
+        this.heartsManager = new HeartsManager(this.gameObjects()::removeGameObject, this.gameObjects()::addGameObject,imageReader, windowDimensions);
 
-
+        // Create background
         Renderable backgroundImage = imageReader.readImage("assets/DARK_BG2_small.jpeg"
                 , false);
         GameObject background = new GameObject(Vector2.ZERO, this.windowDimensions,
@@ -73,40 +79,41 @@ public class BrickGameManager extends GameManager {
         BallFactory ballFactory = new BallFactory(imageReader, soundReader);
 
         ball = ballFactory.createBall(BallType.MAIN);
-        Vector2 windowDimensions = this.windowDimensions;
-        ball.setCenter(windowDimensions.mult(0.5f));
+        this.resetBallPosition();
+
         gameObjects().addGameObject(ball);
 
-
-        // Creating paddles
-
-        Renderable paddleImage =
-                imageReader.readImage("assets/paddle.png", false);
-
-        GameObject paddle = new Paddle(Vector2.ZERO, new Vector2(PADDLE_WIDTH, PADDLE_HEIGHT), paddleImage,
-                inputListener);
+        // Creating paddle
+        PaddleFactory paddleFactory = new PaddleFactory(imageReader, inputListener);
+        GameObject paddle = paddleFactory.createPaddle(PaddleType.Main);
         paddle.setCenter(new Vector2(windowDimensions.x() / 2, (int) windowDimensions.y() - 30));
         gameObjects().addGameObject(paddle);
+
 
         // create bricks
         Renderable brickRenderable = imageReader.readImage("assets/brick.png", false);
 
         BricksStrategyFactory bricksStrategyFactory = new BricksStrategyFactory(
-                this.gameObjects()::addGameObject, ballFactory);
+                this.gameObjects()::addGameObject, this.gameObjects()::removeGameObject, ballFactory,
+                paddleFactory, windowDimensions, imageReader, heartsManager::addHeart, paddle, HEART_SIZE);
 
         bricksManager = new BricksManager(
                 new Vector2(WALL_WIDTH, WALL_WIDTH),
                 new Vector2(windowDimensions.x() - 2 * WALL_WIDTH, windowDimensions.y() - 2 * WALL_WIDTH),
                 this.gameObjects()::addGameObject,
-                this::removeStaticGameObject,
+                this.gameObjects()::removeGameObject,
                 bricksStrategyFactory
         );
 
         bricksManager.createBricks(DEFAULT_NUMBER_OF_BRICKS_PER_ROW, DEFAULT_NUMBER_OF_BRICK_ROWS,
                 brickRenderable);
 
+        // create hearts
+
+
 
     }
+
 
     @Override
     public void update(float deltaTime) {
@@ -117,9 +124,9 @@ public class BrickGameManager extends GameManager {
 
     private void removeFallenItems() {
         for (GameObject gameObject : gameObjects().objectsInLayer(Layer.DEFAULT)) {
-                if (gameObject.getCenter().y() > this.windowDimensions.y() + DELETION_HEIGHT_THRESHOLD) {
-                    gameObjects().removeGameObject(gameObject);
-                }
+            if (gameObject.getCenter().y() > this.windowDimensions.y() + DELETION_HEIGHT_THRESHOLD) {
+                gameObjects().removeGameObject(gameObject);
+            }
         }
     }
 
@@ -127,8 +134,14 @@ public class BrickGameManager extends GameManager {
         float ballY = ball.getCenter().y();
         String prompt = "";
         if (ballY > this.windowDimensions.y()) {
-            // finished
-            prompt = "You lose!";
+            if (this.heartsManager.getHeartscounter() - 1 > 0) {
+                this.heartsManager.removeHeart();
+                this.resetBallPosition();
+                return;
+            } else {
+                // finished
+                prompt = "You lose!";
+            }
         }
 
         if (!bricksManager.hasBricks()) {
@@ -146,9 +159,13 @@ public class BrickGameManager extends GameManager {
 
     }
 
-    private boolean removeStaticGameObject(GameObject gameObject) {
-        return gameObjects().removeGameObject(gameObject, Layer.STATIC_OBJECTS);
+    private void resetBallPosition() {
+        ball.setCenter(windowDimensions.mult(0.5f));
+        Vector2 ballVelocity = Utils.getRandomDiagonal();
+
+        ball.setVelocity(ballVelocity.mult(BallFactory.BALL_SPEED));
     }
+
 
     public static void main(String[] args) {
 

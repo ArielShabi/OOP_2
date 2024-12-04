@@ -4,12 +4,16 @@ import danogl.GameObject;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+import paddle.PaddleType;
 
 import java.awt.event.KeyEvent;
+
+
 
 public class Paddle extends GameObject {
     public static final float MOVEMENT_SPEED = 300;
     private final UserInputListener inputListener;
+    public PaddleType paddleType = PaddleType.Main;
 
     /**
      * Construct a new GameObject instance.
@@ -23,6 +27,7 @@ public class Paddle extends GameObject {
      */
     public Paddle(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
                   UserInputListener inputListener) {
+
         super(topLeftCorner, dimensions, renderable);
         this.inputListener = inputListener;
     }
@@ -30,7 +35,6 @@ public class Paddle extends GameObject {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-
         Vector2 movementDirection = Vector2.ZERO;
 
         if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
@@ -41,11 +45,11 @@ public class Paddle extends GameObject {
         }
 
 
-        if(getTopLeftCorner().x() <= 0){
+        if(getTopLeftCorner().x() <= 20){
             if(movementDirection.x() < 0){
                 movementDirection = Vector2.ZERO;
             }
-        } else if (this.getTopLeftCorner().x()+this.getDimensions().x()>= 700){
+        } else if (this.getTopLeftCorner().x()+this.getDimensions().x()>= 700-20){
             if(movementDirection.x() > 0){
                 movementDirection = Vector2.ZERO;
             }
