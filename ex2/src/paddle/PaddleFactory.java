@@ -13,10 +13,13 @@ public class PaddleFactory {
     private final ImageReader imageReader;
     private final UserInputListener inputListener;
     private final Vector2 topLeftCorner = Vector2.ZERO;
+    private final Vector2 windowDimensions;
 
-    public PaddleFactory(ImageReader imageReader, UserInputListener inputListener) {
+
+    public PaddleFactory(ImageReader imageReader, UserInputListener inputListener, Vector2 windowDimensions) {
         this.imageReader = imageReader;
         this.inputListener = inputListener;
+        this.windowDimensions = windowDimensions;
     }
 
     public Paddle createPaddle(PaddleType paddleType) {
@@ -24,11 +27,11 @@ public class PaddleFactory {
                 imageReader.readImage("assets/paddle.png", false);
         if (paddleType == PaddleType.Main) {
             return new Paddle(topLeftCorner, new Vector2(PADDLE_WIDTH, PADDLE_HEIGHT), paddleImage,
-                    inputListener);
+                    inputListener, windowDimensions);
 
         } else if (paddleType == PaddleType.Extra) {
-            return new ExtraPaddle(topLeftCorner,new Vector2(PADDLE_WIDTH, PADDLE_HEIGHT),paddleImage,
-                    inputListener);
+            return new ExtraPaddle(topLeftCorner, new Vector2(PADDLE_WIDTH, PADDLE_HEIGHT), paddleImage,
+                    inputListener, windowDimensions);
 
         }
         return null;

@@ -14,8 +14,8 @@ public class ExtraPaddle extends Paddle {
     private final static int EXTRA_PADDLE_HIT_COUNT = 4;
 
     public ExtraPaddle(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
-                       UserInputListener inputListener) {
-        super(topLeftCorner, dimensions, renderable, inputListener);
+                       UserInputListener inputListener,  Vector2 windowDimensions) {
+        super(topLeftCorner, dimensions, renderable, inputListener,windowDimensions);
         this.paddleType = PaddleType.Extra;
     }
 
