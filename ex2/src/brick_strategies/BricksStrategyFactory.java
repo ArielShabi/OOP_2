@@ -46,8 +46,6 @@ public class BricksStrategyFactory {
         this.mainBall = mainBall;
         random = new Random();
         extraPaddleCounter = new Counter(0);
-
-
     }
 
     public CollisionStrategy generateCollisionStrategy(Consumer<GameObject> removeBrickFunction) {
@@ -64,31 +62,41 @@ public class BricksStrategyFactory {
     public CollisionStrategy generateSpecialCollisionStrategy(Consumer<GameObject> removeBrickFunction,
                                                               Counter multiCollisionCounter) {
         boolean shouldIncludeMultiCollision = multiCollisionCounter.value() != 0;
-        int chance = random.nextInt(6 - (shouldIncludeMultiCollision ? 0 : 1));
+        int chance = random.nextInt(CollisionStrategyType.values().length -
+                (shouldIncludeMultiCollision ?
+                        0 : 1));
 
-        if (chance == 0) {
-            return new PuckCollisionStrategy(removeBrickFunction, this.addBrickFunction,
-                    this.ballFactory);
-        } else if (chance == 1) {
-            return new ExtraPaddleCollisionStrategy(removeBrickFunction, this.addBrickFunction,
-                    removeGameObjectFunction, this.paddleFactory,
-                    this.windowDimensions, extraPaddleCounter);
-        } else if (chance == 2) {
-            return new TurboCollisionStrategy(removeBrickFunction, mainBall, imageReader);
-        } else if (chance == 3) {
-            return new CollectableCollisionStrategy(removeBrickFunction, this.addBrickFunction,
-                    removeGameObjectFunction, this.imageReader.readImage("assets/heart.png", true),
-                    new HeartCollectedStrategy(addHeartFunction), collectorObject);
-        } else if (chance == 4) {
-            return new CollectableCollisionStrategy(removeBrickFunction, this.addBrickFunction,
-                    removeGameObjectFunction, this.imageReader.readImage("assets/hamburger.png", true),
-                    new HamburgerCollectedStrategy(), collectorObject);
+        CollisionStrategyType strategyType = CollisionStrategyType.values()[chance];
+
+        switch (strategyType) {
+            case PUCK -> {
+                return new PuckCollisionStrategy(removeBrickFunction, this.addBrickFunction,
+                        this.ballFactory);
+            }
+            case EXTRA_PADDLE -> {
+                return new ExtraPaddleCollisionStrategy(removeBrickFunction, this.addBrickFunction,
+                        removeGameObjectFunction, this.paddleFactory,
+                        this.windowDimensions, extraPaddleCounter);
+            }
+            case TURBO -> {
+                return new TurboCollisionStrategy(removeBrickFunction, mainBall, imageReader);
+            }
+            case HEART_COLLECTABLE -> {
+                return new CollectableCollisionStrategy(removeBrickFunction, this.addBrickFunction,
+                        removeGameObjectFunction, this.imageReader.readImage("assets/heart.png", true),
+                        new HeartCollectedStrategy(addHeartFunction), collectorObject);
+            }
+            case HAMBURGER_COLLECTABLE -> {
+                return new CollectableCollisionStrategy(removeBrickFunction, this.addBrickFunction,
+                        removeGameObjectFunction, this.imageReader.readImage("assets/hamburger.png", true),
+                        new HamburgerCollectedStrategy(), collectorObject);
+            }
+            default -> {
+                multiCollisionCounter.decrement();
+                return new MultiCollisionStrategy(removeBrickFunction,
+                        this.generateSpecialCollisionStrategy(removeBrickFunction, multiCollisionCounter),
+                        this.generateSpecialCollisionStrategy(removeBrickFunction, multiCollisionCounter));
+            }
         }
-
-        multiCollisionCounter.decrement();
-        return new MultiCollisionStrategy(removeBrickFunction,
-                this.generateSpecialCollisionStrategy(removeBrickFunction, multiCollisionCounter),
-                this.generateSpecialCollisionStrategy(removeBrickFunction, multiCollisionCounter));
-
     }
 }
