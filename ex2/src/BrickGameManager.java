@@ -104,6 +104,8 @@ public class BrickGameManager extends GameManager {
 
         bricksManager.createBricks(DEFAULT_NUMBER_OF_BRICKS_PER_ROW, DEFAULT_NUMBER_OF_BRICK_ROWS,
                 brickRenderable);
+
+        soundReader.readSound("assets/opening.wav").play();
     }
 
 
