@@ -11,10 +11,12 @@ import game.AddGameObjectFunction;
 import game.RemoveGameObjectFunction;
 import gameobjects.Ball;
 import paddle.PaddleFactory;
+
 import java.util.Random;
 import java.util.function.Consumer;
 
 public class BricksStrategyFactory {
+    private static final int MAX_AMOUNT_OF_MULTI_COLLISIONS = 2;
     private final Random random;
     private final AddGameObjectFunction addBrickFunction;
     private final RemoveGameObjectFunction removeGameObjectFunction;
@@ -49,32 +51,44 @@ public class BricksStrategyFactory {
     }
 
     public CollisionStrategy generateCollisionStrategy(Consumer<GameObject> removeBrickFunction) {
-        int chance = random.nextInt(10);
+        boolean toCreteBasicStrategy = random.nextBoolean();
 
-        if (isBetween(chance, 0, 1)) {
+        if (toCreteBasicStrategy) {
             return new BasicCollisionStrategy(removeBrickFunction);
-        } else if (isBetween(chance, 5, 6)) {
+        }
+
+        return this.generateSpecialCollisionStrategy(removeBrickFunction,
+                new Counter(MAX_AMOUNT_OF_MULTI_COLLISIONS));
+    }
+
+    public CollisionStrategy generateSpecialCollisionStrategy(Consumer<GameObject> removeBrickFunction,
+                                                              Counter multiCollisionCounter) {
+        boolean shouldIncludeMultiCollision = multiCollisionCounter.value() != 0;
+        int chance = random.nextInt(6 - (shouldIncludeMultiCollision ? 0 : 1));
+
+        if (chance == 0) {
             return new PuckCollisionStrategy(removeBrickFunction, this.addBrickFunction,
                     this.ballFactory);
-        } else if (isBetween(chance, 6, 7)) {
+        } else if (chance == 1) {
             return new ExtraPaddleCollisionStrategy(removeBrickFunction, this.addBrickFunction,
                     removeGameObjectFunction, this.paddleFactory,
                     this.windowDimensions, extraPaddleCounter);
-        } else if (isBetween(chance, 7, 8)) {
+        } else if (chance == 2) {
             return new TurboCollisionStrategy(removeBrickFunction, mainBall, imageReader);
-        } else if (isBetween(chance, 8, 9)) {
+        } else if (chance == 3) {
             return new CollectableCollisionStrategy(removeBrickFunction, this.addBrickFunction,
                     removeGameObjectFunction, this.imageReader.readImage("assets/heart.png", true),
                     new HeartCollectedStrategy(addHeartFunction), collectorObject);
-        } else if (isBetween(chance, 1, 10)) {
+        } else if (chance == 4) {
             return new CollectableCollisionStrategy(removeBrickFunction, this.addBrickFunction,
                     removeGameObjectFunction, this.imageReader.readImage("assets/hamburger.png", true),
                     new HamburgerCollectedStrategy(), collectorObject);
         }
-        return null;
-    }
 
-    private static boolean isBetween(int x, int lower, int upper) {
-        return lower <= x && x < upper;
+        multiCollisionCounter.decrement();
+        return new MultiCollisionStrategy(removeBrickFunction,
+                this.generateSpecialCollisionStrategy(removeBrickFunction, multiCollisionCounter),
+                this.generateSpecialCollisionStrategy(removeBrickFunction, multiCollisionCounter));
+
     }
 }
