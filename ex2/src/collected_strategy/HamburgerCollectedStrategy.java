@@ -13,15 +13,17 @@ public class HamburgerCollectedStrategy implements CollectedStrategy, Component 
     @Override
     public void collectOnCollision(GameObject mainObj, Collectable toCollect) {
         this.mainObj = mainObj;
-        mainObj.transform().setDimensions(mainObj.getDimensions().x()*SIZE_MULTIPLIER, mainObj.getDimensions().y());
+        mainObj.transform().setDimensions(mainObj.getDimensions().x() * SIZE_MULTIPLIER,
+                mainObj.getDimensions().y());
         timeOnStart = System.currentTimeMillis();
         mainObj.addComponent(this);
     }
 
     @Override
     public void update(float deltaTime) {
-        if(System.currentTimeMillis() - timeOnStart > LARGE_SIZE_TIME) {
-            mainObj.transform().setDimensions(mainObj.getDimensions().x()/SIZE_MULTIPLIER, mainObj.getDimensions().y());
+        if (System.currentTimeMillis() - timeOnStart > LARGE_SIZE_TIME) {
+            mainObj.transform().setDimensions(mainObj.getDimensions().x() / SIZE_MULTIPLIER,
+                    mainObj.getDimensions().y());
             mainObj.removeComponent(this);
         }
     }

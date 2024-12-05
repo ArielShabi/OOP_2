@@ -3,18 +3,16 @@ package collected_strategy;
 import danogl.GameObject;
 import gameobjects.Collectable;
 
-import java.util.function.Supplier;
-
 public class HeartCollectedStrategy implements CollectedStrategy {
-    private final Supplier<Integer> addHeartFunction;
+    private final Runnable addHeartFunction;
 
-    public HeartCollectedStrategy(Supplier<Integer> addHeartFunction) {
+    public HeartCollectedStrategy(Runnable addHeartFunction) {
         this.addHeartFunction = addHeartFunction;
     }
 
     @Override
     public void collectOnCollision(GameObject mainObj, Collectable toCollect) {
-        addHeartFunction.get();
+        addHeartFunction.run();
     }
 
 }

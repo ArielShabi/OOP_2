@@ -41,9 +41,8 @@ public class CollectableCollisionStrategy extends BasicCollisionStrategy {
         Collectable collectable = new Collectable(Vector2.ZERO, new Vector2(COLLECTABLE_SIZE, COLLECTABLE_SIZE),
                 renderable, collectedStrategy, removeCollectableFunction, collectorObject);
 
-        Vector2 heartPosition = new Vector2(a.getCenter().x(), a.getCenter().y() + COLLECTABLE_SIZE); //to check
-        // without +HEART_SIZE
-        collectable.setCenter(heartPosition);
+        Vector2 collectablePosition = new Vector2(a.getCenter().x(), a.getCenter().y() + COLLECTABLE_SIZE); //to check
+        collectable.setCenter(collectablePosition);
         collectable.setVelocity(Vector2.DOWN.mult(MOVEMENT_SPEED));
 
         this.addGameObjectFunction.run(collectable, Layer.DEFAULT);

@@ -13,7 +13,6 @@ import gameobjects.Ball;
 import paddle.PaddleFactory;
 import java.util.Random;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class BricksStrategyFactory {
     private final Random random;
@@ -24,15 +23,15 @@ public class BricksStrategyFactory {
     private final Vector2 windowDimensions;
     private final Counter extraPaddleCounter;
     private final ImageReader imageReader;
-    private final Supplier<Integer> addHeartFunction;
-    private final GameObject heartCollector;
+    private final Runnable addHeartFunction;
+    private final GameObject collectorObject;
     private final Ball mainBall;
 
     public BricksStrategyFactory(AddGameObjectFunction addBrickFunction,
                                  RemoveGameObjectFunction removeGameObjectFunction,
                                  BallFactory ballFactory, PaddleFactory paddleFactory,
                                  Vector2 windowDimensions, ImageReader imageReader,
-                                 Supplier<Integer> addHeartFunction, GameObject heartCollector,
+                                 Runnable addHeartFunction, GameObject collectorObject,
                                  Ball mainBall) {
         this.addBrickFunction = addBrickFunction;
         this.removeGameObjectFunction = removeGameObjectFunction;
@@ -41,7 +40,7 @@ public class BricksStrategyFactory {
         this.windowDimensions = windowDimensions;
         this.imageReader = imageReader;
         this.addHeartFunction = addHeartFunction;
-        this.heartCollector = heartCollector;
+        this.collectorObject = collectorObject;
         this.mainBall = mainBall;
         random = new Random();
         extraPaddleCounter = new Counter(0);
@@ -66,11 +65,11 @@ public class BricksStrategyFactory {
         } else if (isBetween(chance, 8, 9)) {
             return new CollectableCollisionStrategy(removeBrickFunction, this.addBrickFunction,
                     removeGameObjectFunction, this.imageReader.readImage("assets/heart.png", true),
-                    new HeartCollectedStrategy(addHeartFunction), heartCollector);
+                    new HeartCollectedStrategy(addHeartFunction), collectorObject);
         } else if (isBetween(chance, 1, 10)) {
             return new CollectableCollisionStrategy(removeBrickFunction, this.addBrickFunction,
                     removeGameObjectFunction, this.imageReader.readImage("assets/hamburger.png", true),
-                    new HamburgerCollectedStrategy(), heartCollector);
+                    new HamburgerCollectedStrategy(), collectorObject);
         }
         return null;
     }
