@@ -17,7 +17,6 @@ public class BricksManager {
     private final Vector2 topLeftCorner;
     private final Vector2 bricksContainerDimensions;
 
-    private Brick[] bricks;
     private int bricksCounter = 0;
 
     /**
@@ -40,8 +39,6 @@ public class BricksManager {
 
 
     public void createBricks(int numberOfBricksPerRow, int numberOfBrickRows, Renderable brickRenderable) {
-        this.bricks = new Brick[numberOfBricksPerRow * numberOfBrickRows];
-
         float brickWidth =
                 (this.bricksContainerDimensions.x() - ((numberOfBricksPerRow - 1) * BRICK_GAP)) / numberOfBricksPerRow;
 
@@ -58,7 +55,6 @@ public class BricksManager {
                         brickCollisionStrategy
                         );
 
-                bricks[i * numberOfBricksPerRow + j] = brick;
                 bricksCounter++;
                 addBrickFunction.run(brick, Layer.STATIC_OBJECTS);
             }
