@@ -18,6 +18,7 @@ import paddle.PaddleFactory;
 import paddle.PaddleType;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 
 public class BrickGameManager extends GameManager {
@@ -29,6 +30,7 @@ public class BrickGameManager extends GameManager {
     private WindowController windowController;
     private BricksManager bricksManager;
     private HeartsManager heartsManager;
+    private UserInputListener inputListener;
 
 
     public BrickGameManager(String windowTitle, Vector2 windowDimensions) {
@@ -39,6 +41,7 @@ public class BrickGameManager extends GameManager {
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
+        this.inputListener = inputListener;
         this.windowController = windowController;
         this.windowDimensions = windowController.getWindowDimensions();
         this.heartsManager = new HeartsManager(this.gameObjects()::removeGameObject, this.gameObjects()::addGameObject,imageReader, windowDimensions);
@@ -137,7 +140,7 @@ public class BrickGameManager extends GameManager {
             }
         }
 
-        if (!bricksManager.hasBricks()) {
+        if (this.checkForWin()) {
             prompt = "You win!";
         }
 
@@ -151,6 +154,11 @@ public class BrickGameManager extends GameManager {
         }
 
     }
+
+    private boolean checkForWin() {
+        return !bricksManager.hasBricks() || this.inputListener.isKeyPressed(KeyEvent.VK_W);
+    }
+
 
     private void resetBallPosition() {
         ball.setCenter(windowDimensions.mult(0.5f));
