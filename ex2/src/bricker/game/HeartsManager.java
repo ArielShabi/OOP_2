@@ -6,6 +6,7 @@ import danogl.gui.ImageReader;
 import danogl.gui.rendering.Renderable;
 import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
+import bricker.main.Config;
 
 import java.awt.*;
 
@@ -20,7 +21,7 @@ public class HeartsManager {
     private final RemoveGameObjectFunction removeGameObjectFunction;
     private final AddGameObjectFunction addGameObjectFunction;
     private final ImageReader imageReader;
-    private final float HEART_SIZE = 20;
+    private final float HEART_SIZE = Config.HEART_SIZE;
     private final Vector2 windowDimensions;
     private final GameObject numericCount;
 
@@ -65,7 +66,7 @@ public class HeartsManager {
      * Add a heart to the player.
      * @return The number of hearts the player has.
      */
-    public int addHeart() {
+    public void addHeart() {
         if (heartsCounter < MAX_HEARTS) {
             Renderable heartRenderable = imageReader.readImage("assets/heart.png", true);
             GameObject heart = new GameObject(Vector2.ZERO, new Vector2(HEART_SIZE, HEART_SIZE),
@@ -77,7 +78,6 @@ public class HeartsManager {
             heartsCounter++;
             updateNumericHearts();
         }
-        return heartsCounter;
     }
 
     /**

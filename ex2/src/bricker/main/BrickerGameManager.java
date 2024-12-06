@@ -39,6 +39,16 @@ public class BrickerGameManager extends GameManager {
     private BricksManager bricksManager;
     private HeartsManager heartsManager;
     private UserInputListener inputListener;
+    private static final int PADDLE_DISTANCE_FROM_FLOOR = 30;
+    private static final String GAME_NAME = "Bouncing Ball";
+    private static final String LOSE_PROMPT = "You lose!";
+    private static final String WIN_PROMPT = "You win!";
+    private static final String PLAY_AGAIN_PROMPT = " Play again?";
+    private static final float WINDOWX_X_DIMENSIONS = 700;
+    private static final float WINDOWX_Y_DIMENSIONS = 500;
+
+
+
 
 
     /**
@@ -104,7 +114,7 @@ public class BrickerGameManager extends GameManager {
 
         createBricks(imageReader, bricksStrategyFactory);
 
-        soundReader.readSound("assets/opening.wav").play();
+        soundReader.readSound(AssetsConfig.OPENING_PATH).play();
     }
 
     /**
@@ -136,7 +146,7 @@ public class BrickerGameManager extends GameManager {
 
     private GameObject createPaddle(PaddleFactory paddleFactory) {
         GameObject paddle = paddleFactory.createPaddle(PaddleType.Main);
-        paddle.setCenter(new Vector2(windowDimensions.x() / 2, (int) windowDimensions.y() - 30));
+        paddle.setCenter(new Vector2(windowDimensions.x() / 2, (int) windowDimensions.y() - PADDLE_DISTANCE_FROM_FLOOR));
         gameObjects().addGameObject(paddle);
         return paddle;
     }
@@ -168,7 +178,7 @@ public class BrickerGameManager extends GameManager {
     }
 
     private void createBackground(ImageReader imageReader) {
-        Renderable backgroundImage = imageReader.readImage("assets/DARK_BG2_small.jpeg"
+        Renderable backgroundImage = imageReader.readImage(AssetsConfig.BACKGROUND_PATH
                 , false);
         GameObject background = new GameObject(Vector2.ZERO, this.windowDimensions,
                 backgroundImage);
@@ -193,16 +203,16 @@ public class BrickerGameManager extends GameManager {
                 this.resetBallPosition();
                 return;
             } else {
-                prompt = "You lose!";
+                prompt = LOSE_PROMPT;
             }
         }
 
         if (this.checkForWin()) {
-            prompt = "You win!";
+            prompt = WIN_PROMPT;
         }
 
         if (!prompt.isEmpty()) {
-            prompt += " Play again?";
+            prompt += PLAY_AGAIN_PROMPT;
             if (this.windowController.openYesNoDialog(prompt)) {
                 windowController.resetGame();
             } else {
@@ -235,13 +245,13 @@ public class BrickerGameManager extends GameManager {
         GameManager game;
         if (parsedArgs != null) {
             game = new BrickerGameManager(
-                    "Bouncing Ball",
-                    new Vector2(700, 500),
+                    GAME_NAME,
+                    new Vector2(WINDOWX_X_DIMENSIONS, WINDOWX_Y_DIMENSIONS),
                     parsedArgs[0],
                     parsedArgs[1]
             );
         } else {
-            game = new BrickerGameManager("Bouncing Ball", new Vector2(700, 500));
+            game = new BrickerGameManager(GAME_NAME, new Vector2(WINDOWX_X_DIMENSIONS, WINDOWX_Y_DIMENSIONS));
         }
 
 

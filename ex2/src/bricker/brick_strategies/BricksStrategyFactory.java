@@ -3,6 +3,7 @@ package bricker.brick_strategies;
 import bricker.ball.BallFactory;
 import bricker.collected_strategy.HamburgerCollectedStrategy;
 import bricker.collected_strategy.HeartCollectedStrategy;
+import bricker.main.AssetsConfig;
 import danogl.GameObject;
 import danogl.gui.ImageReader;
 import danogl.util.Counter;
@@ -113,12 +114,12 @@ public class BricksStrategyFactory {
             }
             case HEART_COLLECTABLE -> {
                 return new CollectableCollisionStrategy(removeBrickFunction, this.addBrickFunction,
-                        removeGameObjectFunction, this.imageReader.readImage("assets/heart.png", true),
+                        removeGameObjectFunction, this.imageReader.readImage(AssetsConfig.HEART_PATH, true),
                         new HeartCollectedStrategy(addHeartFunction), collectorObject);
             }
             case HAMBURGER_COLLECTABLE -> {
                 return new CollectableCollisionStrategy(removeBrickFunction, this.addBrickFunction,
-                        removeGameObjectFunction, this.imageReader.readImage("assets/hamburger.png", true),
+                        removeGameObjectFunction, this.imageReader.readImage(AssetsConfig.HAMBURGER_PATH, true),
                         new HamburgerCollectedStrategy(), collectorObject);
             }
             default -> {
