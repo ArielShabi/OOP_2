@@ -1,0 +1,116 @@
+yael_weiss,ariel.shabi6
+314922899,208672527
+
+1) Part 1.7:
+   In Order to remove the bricks from the game, we created a new class called BasicCollisionStrategy.
+   This class implements the CollisionStrategy interface and is responsible for removing the brick from the game.
+   All the other collision strategies are inherited from BasicCollisionStrategy such that in every other strategy
+   we first remove the brick from the game and then apply the strategy.
+   The BasicCollisionStrategy has a reference to a removeBrick method, and does not have a reference to the whole
+   game manager.
+   Pros:
+    1. The code is more modular and easy to maintain:
+       - The Collision Strategies are separated from the game manager and do not have a reference to the whole game
+         manager. In this implementation, encapsulation is maintained.
+       - If we want to change the way we remove a brick from the game,
+         we can do it in one place.
+       - If we want to add a new strategy, we can do it easily by inheriting from BasicCollisionStrategy and the brick
+         will be removed from the game
+   Cons:
+    1. if we want to change the way we remove a brick from the game, we need to change the BasicCollisionStrategy
+       class and it affects all the other strategies.
+
+    In the instructions, it was written that we should remove the brick from the game in *every* collision strategy
+    so we chose to implement it in this way.
+
+
+2) Part 1.8:
+   In order to manage the health points of the player, we created a new class called HeartsManager.
+   We decided to do it in order to focus all the responsibility of managing the health points in one place.
+   Therefore, this class is responsible for updating the hearts in the game (graphic and numeric), add and
+   remove hearts as a gameObjects (and from the UI layer).
+   In CollectedStrategy, we added the logic to add a heart to the player when he collects a heart.
+   Therefore, we gave this strategy a reference only to the addHeart method in the HeartsManager class (and not all
+   the HeartsManager class).
+   **Explanation about the CollectedStrategy is in the next section.
+
+3) We focused all the brick collision strategies in a new package called brick_strategies.
+   In this package, we created BricksStrategyFactory that responsible for generating a collision strategy.
+   In addition, we created an interface called CollisionStrategy.
+   There is 1 class that implements the CollisionStrategy interface called BasicCollisionStrategy.
+    and all the other collision strategies are inherited from it.
+           3.1. Interface: CollisionStrategy - Interface for all collision strategies.
+           3.2. Class: BricksStrategyFactory - Factory for generating a collision strategy.
+           3.3. Class: BasicCollisionStrategy - Class that implements CollisionStrategy interface.
+                                                Only removes the brick from the game.
+                                                This strategy get only a function to remove the brick from the game
+                                                (not for the whole game manager).
+
+           3.4. Class: PuckCollisionStrategy - This strategy provides puck ball.
+                                               Uses the BallFactory to create a new puck ball.
+                                               **In order to change the number of pucks, change the constant in the
+                                               class.
+
+           3.5 Class: ExtraPaddleCollisionStrategy - This strategy provides an extra paddle.
+                                              Uses the PaddleFactory to create a new paddle.
+
+           3.6 Class: TurboCollisionStrategy - Class that implements CollisionStrategy and inherited from
+                                              BasicCollisionStrategy.
+                                              This strategy turns the ball to a turbo mode.
+                                              Uses dango Component to add logic to the update method of the ball,
+                                              and reset the ball to the normal mode after a const number of time.
+
+           3.7 Class: CollectedStrategy - Class that implements CollisionStrategy and inherited from
+                                          BasicCollisionStrategy.
+                                          This strategy is responsible for creating objects that can be collected
+                                          by the main paddle. In order to implement this strategy, we created a
+                                          new class in the game_objects package called Collectable that is
+                                          inherited from GameObject.
+                                          In the Collectable class we override onCollisionEnter such that
+                                          when a collision between the main paddle and a Collectable object happens,
+                                          a collectedStrategy is called.
+
+                                          What is a CollectedStrategy?
+                                          A CollectedStrategy is a strategy that is responsible for the logic of
+                                          the case when a collectable object is collided with the main paddle.
+                                          Therefore, We created a new package called collected_strategies that
+                                          contains an interface CollectedStrategy and all the collected strategies
+                                          class that implements this interface.
+
+                                          **Back to the specific instructions we got for this assignment:
+                                            In the instructions, it was written that should be an item (heart)
+                                            that can be collected by the main paddle. Therefore, we created a new
+                                            class called HeartCollectedStrategy that implements the CollectedStrategy
+                                            interface and "collects" a collectable object (heart).
+
+                                          **In addition, in our game you can collect hamburgers too.
+                                            if you collect a hamburger, your paddle will grow (be fatter) for
+                                            a const number of time (you can easily change it in
+                                            HamburgerCollectedStrategy class). Therefore, there is a small difference
+                                            between the probability to get every collision Strategy that is
+                                            written in the instruction and in our game (you can
+                                            easily change the chances to get every brick collision strategy in
+                                            BricksCollisionStrategyFactory class).
+
+4)         3.8 Class: MultiCollisionStrategy - Class that implements CollisionStrategy and inherited from
+                                          BasicCollisionStrategy.
+                                          This strategy is responsible for combining 2 collision
+                                          strategies together.
+                                          We used Decorator design pattern in order to combine 2
+                                          CollisionStrategies.
+
+                                          In general, the MultiCollisionStrategy is a tool to combine 2 strategies.
+                                          Therefore, the class that calls this strategy is responsible for limiting
+                                          the number of strategies which are combined together.
+                                          In our game, the BricksCollisionStrategyFactory is calling the
+                                          MultiCollisionStrategy therefore is responsible for the limiting.
+                                          The limiting is done in the factory by using recursion and dango.Counter.
+                                          **In this implementation, the number of strategies that are combined
+                                          is configurable in the factory.
+
+**Class: brick GameObject:
+    We added a field called collisionStrategy. In this implementation, we can easily change the collision
+    strategy of a brick and it maintains the pillar of polymorphism.
+
+
+

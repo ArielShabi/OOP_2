@@ -29,7 +29,7 @@ public class BallCollisionCounterComponent implements Component {
      */
     @Override
     public void update(float deltaTime) {
-        if(owner.getCollisionCounter() == endCount){
+        if(owner.getCollisionCounter() >= endCount){
             this.onCounterFinish.run();
             owner.removeComponent(this);
         }

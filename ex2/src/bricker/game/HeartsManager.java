@@ -16,6 +16,8 @@ import java.awt.*;
  */
 public class HeartsManager {
     private final static int INITIAL_HEARTS = 3;
+    private static final int RED_NUMERIC = 1;
+    private static final int YELLOW_NUMERIC = 2;
     private int heartsCounter;
     private final int MAX_HEARTS = 4;
     private final GameObject[] hearts;
@@ -91,13 +93,13 @@ public class HeartsManager {
     private void updateNumericHearts() {
         TextRenderable textRenderable = new TextRenderable(String.valueOf(heartsCounter));
         switch (heartsCounter) {
-            case 1:
+            case RED_NUMERIC:
                 textRenderable.setColor(Color.RED);
                 break;
-            case 2:
+            case YELLOW_NUMERIC:
                 textRenderable.setColor(Color.YELLOW);
                 break;
-            default:
+            default: // the default is green
                 textRenderable.setColor(Color.GREEN);
                 break;
         }

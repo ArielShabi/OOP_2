@@ -43,8 +43,8 @@ public class BrickerGameManager extends GameManager {
     private static final String LOSE_PROMPT = "You lose!";
     private static final String WIN_PROMPT = "You win!";
     private static final String PLAY_AGAIN_PROMPT = " Play again?";
-    private static final float WINDOWX_X_DIMENSIONS = 1500;
-    private static final float WINDOWX_Y_DIMENSIONS = 800;
+    private static final float WINDOWX_X_DIMENSIONS = 700;
+    private static final float WINDOWX_Y_DIMENSIONS = 500;
 
     /**
      * Construct a new BrickerGameManager instance.
