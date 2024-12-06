@@ -65,7 +65,6 @@ public class HeartsManager {
 
     /**
      * Add a heart to the player.
-     * @return The number of hearts the player has.
      */
     public void addHeart() {
         if (heartsCounter < MAX_HEARTS) {
