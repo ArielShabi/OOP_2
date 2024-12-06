@@ -25,6 +25,9 @@ public class BrickGameManager extends GameManager {
     private static final int DEFAULT_NUMBER_OF_BRICK_ROWS = 6;
     private static final int DEFAULT_NUMBER_OF_BRICKS_PER_ROW = 5;
     private static final float DELETION_HEIGHT_THRESHOLD = 50;
+    public static final int ARGS_LENGTH = 2;
+    private final int bricksPerRow;
+    private final int brickRows;
     private Ball ball;
     private Vector2 windowDimensions;
     private WindowController windowController;
@@ -33,8 +36,18 @@ public class BrickGameManager extends GameManager {
     private UserInputListener inputListener;
 
 
-    public BrickGameManager(String windowTitle, Vector2 windowDimensions) {
+    public BrickGameManager(String windowTitle, Vector2 windowDimensions, int bricksPerRow, int brickRows) {
         super(windowTitle, windowDimensions);
+        this.bricksPerRow = bricksPerRow;
+        this.brickRows = brickRows;
+    }
+
+    public BrickGameManager(String windowTitle, Vector2 windowDimensions) {
+        this(
+                windowTitle,
+                windowDimensions,
+                DEFAULT_NUMBER_OF_BRICKS_PER_ROW,
+                DEFAULT_NUMBER_OF_BRICK_ROWS);
     }
 
     @Override
@@ -44,7 +57,8 @@ public class BrickGameManager extends GameManager {
         this.inputListener = inputListener;
         this.windowController = windowController;
         this.windowDimensions = windowController.getWindowDimensions();
-        this.heartsManager = new HeartsManager(this.gameObjects()::removeGameObject, this.gameObjects()::addGameObject,imageReader, windowDimensions);
+        this.heartsManager = new HeartsManager(this.gameObjects()::removeGameObject,
+                this.gameObjects()::addGameObject, imageReader, windowDimensions);
 
         // Create background
         Renderable backgroundImage = imageReader.readImage("assets/DARK_BG2_small.jpeg"
@@ -99,14 +113,14 @@ public class BrickGameManager extends GameManager {
 
         bricksManager = new BricksManager(
                 new Vector2(Config.WALL_WIDTH, Config.WALL_WIDTH),
-                new Vector2(windowDimensions.x() - 2 * Config.WALL_WIDTH, windowDimensions.y() - 2 * Config.WALL_WIDTH),
+                new Vector2(windowDimensions.x() - 2 * Config.WALL_WIDTH,
+                        windowDimensions.y() - 2 * Config.WALL_WIDTH),
                 this.gameObjects()::addGameObject,
                 this.gameObjects()::removeGameObject,
                 bricksStrategyFactory
         );
 
-        bricksManager.createBricks(DEFAULT_NUMBER_OF_BRICKS_PER_ROW, DEFAULT_NUMBER_OF_BRICK_ROWS,
-                brickRenderable);
+        bricksManager.createBricks(this.bricksPerRow, this.brickRows, brickRenderable);
 
         soundReader.readSound("assets/opening.wav").play();
     }
@@ -115,8 +129,8 @@ public class BrickGameManager extends GameManager {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        checkForGameEnd();
-        removeFallenItems();
+        this.checkForGameEnd();
+        this.removeFallenItems();
     }
 
     private void removeFallenItems() {
@@ -170,10 +184,39 @@ public class BrickGameManager extends GameManager {
 
     public static void main(String[] args) {
 
-        GameManager game = new BrickGameManager("Bouncing Ball", new Vector2(700, 500));
+        int[] parsedArgs = parseArgs(args);
+        GameManager game;
+        if (parsedArgs != null) {
+            game = new BrickGameManager(
+                    "Bouncing Ball",
+                    new Vector2(700, 500),
+                    parsedArgs[0],
+                    parsedArgs[1]
+            );
+        } else {
+            game = new BrickGameManager("Bouncing Ball", new Vector2(700, 500));
+        }
+
 
         game.run();
 
         System.out.println("Hello World" + game);
+    }
+
+    private static int[] parseArgs(String[] args) {
+        if (args.length != ARGS_LENGTH) {
+            return null;
+        }
+        int[] parsedArgs = new int[ARGS_LENGTH];
+
+        for (int i = 0; i < ARGS_LENGTH; i++) {
+            try {
+                parsedArgs[i] = Integer.parseInt(args[i]);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+
+        return parsedArgs;
     }
 }
