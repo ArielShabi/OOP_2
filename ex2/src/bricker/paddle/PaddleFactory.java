@@ -8,6 +8,10 @@ import danogl.util.Vector2;
 import bricker.gameobjects.ExtraPaddle;
 import bricker.gameobjects.Paddle;
 
+
+/**
+ * Factory class to create paddles.
+ */
 public class PaddleFactory {
     private static final int PADDLE_WIDTH = 150;
     private static final float PADDLE_HEIGHT = 20;
@@ -16,13 +20,25 @@ public class PaddleFactory {
     private final Vector2 topLeftCorner = Vector2.ZERO;
     private final Vector2 windowDimensions;
 
-
+    /**
+     * Construct a new PaddleFactory instance.
+     *
+     * @param imageReader    ImageReader instance.
+     * @param inputListener  UserInputListener instance.
+     * @param windowDimensions Dimensions of the window.
+     */
     public PaddleFactory(ImageReader imageReader, UserInputListener inputListener, Vector2 windowDimensions) {
         this.imageReader = imageReader;
         this.inputListener = inputListener;
         this.windowDimensions = windowDimensions;
     }
 
+    /**
+     * Create a new paddle.
+     *
+     * @param paddleType Type of paddle to create.
+     * @return The created paddle.
+     */
     public Paddle createPaddle(PaddleType paddleType) {
         Renderable paddleImage =
                 imageReader.readImage(AssetsConfig.PADDLE_PATH, false);

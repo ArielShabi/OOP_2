@@ -1,5 +1,6 @@
 package bricker.game;
 
+import bricker.main.AssetsConfig;
 import danogl.GameObject;
 import danogl.collisions.Layer;
 import danogl.gui.ImageReader;
@@ -10,6 +11,9 @@ import bricker.main.Config;
 
 import java.awt.*;
 
+/**
+ * Class to manage the hearts of the player.
+ */
 public class HeartsManager {
     private final static int INITIAL_HEARTS = 3;
     private int heartsCounter;
@@ -22,17 +26,25 @@ public class HeartsManager {
     private final Vector2 windowDimensions;
     private final GameObject numericCount;
 
-
-
-    public HeartsManager(RemoveGameObjectFunction removeGameObjectFunction, AddGameObjectFunction addGameObjectFunction, ImageReader imageReader, Vector2 windowDimensions) {
+    /**
+     * Construct a new HeartsManager instance.
+     * @param removeGameObjectFunction Function to remove a GameObject from the game.
+     * @param addGameObjectFunction Function to add a GameObject to the game.
+     * @param imageReader ImageReader instance.
+     * @param windowDimensions Dimensions of the window.
+     */
+    public HeartsManager(RemoveGameObjectFunction removeGameObjectFunction,
+                         AddGameObjectFunction addGameObjectFunction, ImageReader imageReader,
+                         Vector2 windowDimensions) {
         this.removeGameObjectFunction = removeGameObjectFunction;
         this.addGameObjectFunction = addGameObjectFunction;
         this.imageReader = imageReader;
         this.windowDimensions = windowDimensions;
         this.hearts = new GameObject[MAX_HEARTS];
 
-        GameObject numericCount = new GameObject(Vector2.ZERO, new Vector2(HEART_SIZE,HEART_SIZE),new TextRenderable(""));
-        numericCount.setCenter(new Vector2(2*HEART_SIZE ,this.windowDimensions.y()- HEART_SIZE));
+        GameObject numericCount = new GameObject(Vector2.ZERO, new Vector2(HEART_SIZE, HEART_SIZE),
+                new TextRenderable(""));
+        numericCount.setCenter(new Vector2(2 * HEART_SIZE, this.windowDimensions.y() - HEART_SIZE));
         addGameObjectFunction.run(numericCount, Layer.UI);
         this.numericCount = numericCount;
 
@@ -41,19 +53,26 @@ public class HeartsManager {
         }
     }
 
+    /**
+     * Remove a heart from the player.
+     */
     public void removeHeart() {
         heartsCounter--;
         removeGameObjectFunction.run(hearts[this.heartsCounter], Layer.UI);
-        hearts[this.heartsCounter]=null;
+        hearts[this.heartsCounter] = null;
         updateNumericHearts();
     }
 
+    /**
+     * Add a heart to the player.
+     */
     public void addHeart() {
         if (heartsCounter < MAX_HEARTS) {
-            Renderable heartRenderable = imageReader.readImage("assets/heart.png", true);
+            Renderable heartRenderable = imageReader.readImage(AssetsConfig.HEART_PATH, true);
             GameObject heart = new GameObject(Vector2.ZERO, new Vector2(HEART_SIZE, HEART_SIZE),
                     heartRenderable);
-            heart.setCenter(new Vector2(4*HEART_SIZE + this.heartsCounter * HEART_SIZE,this.windowDimensions.y()- HEART_SIZE));
+            heart.setCenter(new Vector2(4 * HEART_SIZE + this.heartsCounter * HEART_SIZE,
+                    this.windowDimensions.y() - HEART_SIZE));
             addGameObjectFunction.run(heart, Layer.UI);
             hearts[this.heartsCounter] = heart;
             heartsCounter++;
@@ -61,9 +80,17 @@ public class HeartsManager {
         }
     }
 
+    /**
+     * Get the number of hearts the player has.
+     * @return The number of hearts the player has.
+     */
+    public int getHeartsCounter() {
+        return heartsCounter;
+    }
+
     private void updateNumericHearts() {
         TextRenderable textRenderable = new TextRenderable(String.valueOf(heartsCounter));
-        switch(heartsCounter){
+        switch (heartsCounter) {
             case 1:
                 textRenderable.setColor(Color.RED);
                 break;
@@ -77,8 +104,5 @@ public class HeartsManager {
         this.numericCount.renderer().setRenderable(textRenderable);
     }
 
-    public int getHeartsCounter() {
-        return heartsCounter;
-    }
 
 }

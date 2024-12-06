@@ -22,11 +22,14 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 
+/**
+ * Class that manages the bricker game.
+ */
 public class BrickerGameManager extends GameManager {
     private static final int DEFAULT_NUMBER_OF_ROWS = 7;
     private static final int DEFAULT_NUMBER_OF_BRICKS_PER_ROW = 8;
     private static final float DELETION_HEIGHT_THRESHOLD = 30;
-    public static final int ARGS_LENGTH = 2;
+    private static final int ARGS_LENGTH = 2;
     private final int bricksPerRow;
     private final int brickRows;
     private Ball ball;
@@ -40,19 +43,29 @@ public class BrickerGameManager extends GameManager {
     private static final String LOSE_PROMPT = "You lose!";
     private static final String WIN_PROMPT = "You win!";
     private static final String PLAY_AGAIN_PROMPT = " Play again?";
-    private static final float WINDOWX_X_DIMENSIONS = 700;
-    private static final float WINDOWX_Y_DIMENSIONS = 500;
+    private static final float WINDOWX_X_DIMENSIONS = 1500;
+    private static final float WINDOWX_Y_DIMENSIONS = 800;
 
-
-
-
-
+    /**
+     * Construct a new BrickerGameManager instance.
+     *
+     * @param windowTitle       Title of the window.
+     * @param windowDimensions  Width and height of the window.
+     * @param bricksPerRow      Number of bricks per row.
+     * @param brickRows         Number of brick rows.
+     */
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions, int bricksPerRow, int brickRows) {
         super(windowTitle, windowDimensions);
         this.bricksPerRow = bricksPerRow;
         this.brickRows = brickRows;
     }
 
+    /**
+     * Construct a new BrickerGameManager instance. Uses default values for bricks per row and brick rows.
+     *
+     * @param windowTitle      Title of the window.
+     * @param windowDimensions Width and height of the window.
+     */
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
         this(
                 windowTitle,
@@ -61,6 +74,14 @@ public class BrickerGameManager extends GameManager {
                 DEFAULT_NUMBER_OF_ROWS);
     }
 
+    /**
+     * Initialize the game.
+     *
+     * @param imageReader      ImageReader instance.
+     * @param soundReader      SoundReader instance.
+     * @param inputListener    UserInputListener instance.
+     * @param windowController WindowController instance.
+     */
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
@@ -86,12 +107,24 @@ public class BrickerGameManager extends GameManager {
                 paddleFactory, windowDimensions, imageReader, heartsManager::addHeart, paddle,
                 this.ball);
 
-        createBricks(imageReader, soundReader, bricksStrategyFactory);
+        createBricks(imageReader, bricksStrategyFactory);
 
         soundReader.readSound(AssetsConfig.OPENING_PATH).play();
     }
 
-    private void createBricks(ImageReader imageReader, SoundReader soundReader, BricksStrategyFactory bricksStrategyFactory) {
+    /**
+     * Update the game state. Check for game end and remove fallen items.
+     *
+     * @param deltaTime Time elapsed since the last update.
+     */
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+        this.checkForGameEnd();
+        this.removeFallenItems();
+    }
+
+    private void createBricks(ImageReader imageReader, BricksStrategyFactory bricksStrategyFactory) {
         Renderable brickRenderable = imageReader.readImage(AssetsConfig.BRICK_PATH, false);
 
         bricksManager = new BricksManager(
@@ -148,14 +181,6 @@ public class BrickerGameManager extends GameManager {
         gameObjects().addGameObject(background, Layer.BACKGROUND);
     }
 
-
-    @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
-        this.checkForGameEnd();
-        this.removeFallenItems();
-    }
-
     private void removeFallenItems() {
         for (GameObject gameObject : gameObjects().objectsInLayer(Layer.DEFAULT)) {
             if (gameObject.getCenter().y() > this.windowDimensions.y() + DELETION_HEIGHT_THRESHOLD) {
@@ -204,6 +229,11 @@ public class BrickerGameManager extends GameManager {
     }
 
 
+    /**
+     * Main method.
+     *
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
 
         int[] parsedArgs = parseArgs(args);

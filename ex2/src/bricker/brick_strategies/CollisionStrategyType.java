@@ -1,5 +1,8 @@
 package bricker.brick_strategies;
 
+/**
+ * Enum for the type of collision strategy
+ */
 public enum CollisionStrategyType {
     PUCK,
     EXTRA_PADDLE,

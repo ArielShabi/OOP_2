@@ -7,15 +7,23 @@ import danogl.collisions.Layer;
 import danogl.util.Vector2;
 import bricker.game.AddGameObjectFunction;
 import bricker.gameobjects.Ball;
-
 import java.util.function.Consumer;
 
+/**
+ * Collision strategy that creates two pucks when a collision occurs.
+ */
 public class PuckCollisionStrategy extends BasicCollisionStrategy {
 
     private final static int PUCK_TO_CREATE = 2;
     private final AddGameObjectFunction addGameObjectFunction;
     private final BallFactory ballFactory;
 
+    /**
+     * Constructor for the puck collision strategy.
+     * @param removeGameObjectFunction The function to remove the game object.
+     * @param addGameObjectFunction The function to add a game object.
+     * @param ballFactory The factory for creating balls.
+     */
     public PuckCollisionStrategy(Consumer<GameObject> removeGameObjectFunction,
                                  AddGameObjectFunction addGameObjectFunction, BallFactory ballFactory) {
         super(removeGameObjectFunction);
@@ -23,6 +31,11 @@ public class PuckCollisionStrategy extends BasicCollisionStrategy {
         this.ballFactory = ballFactory;
     }
 
+    /**
+     * Creates two pucks when a collision occurs.
+     * @param a The first object in the collision.
+     * @param b The second object in the collision.
+     */
     @Override
     public void onCollision(GameObject a, GameObject b) {
         super.onCollision(a, b);
