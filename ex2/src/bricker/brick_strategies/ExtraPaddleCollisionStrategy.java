@@ -12,7 +12,9 @@ import bricker.paddle.PaddleType;
 
 import java.util.function.Consumer;
 
-
+/**
+ * A strategy that creates an extra paddle when a collision occurs.
+ */
 public class ExtraPaddleCollisionStrategy extends BasicCollisionStrategy {
     private final AddGameObjectFunction addPaddleFunction;
     private final RemoveGameObjectFunction removePaddleFunction;
@@ -21,6 +23,15 @@ public class ExtraPaddleCollisionStrategy extends BasicCollisionStrategy {
     private ExtraPaddle extraPaddle = null;
     private final Counter extraPaddleCounter;
 
+    /**
+     * Constructor for the extra paddle collision strategy.
+     * @param removeGameObjectFunction The function to remove the game object.
+     * @param addPaddleFunction The function to add a paddle object.
+     * @param removePaddleFunction The function to remove a paddle object.
+     * @param paddleFactory The factory for creating paddles.
+     * @param windowDimensions The dimensions of the game window.
+     * @param extraPaddleCounter The counter for the extra paddles.
+     */
     public ExtraPaddleCollisionStrategy(Consumer<GameObject> removeGameObjectFunction,
                                         AddGameObjectFunction addPaddleFunction,
                                         RemoveGameObjectFunction removePaddleFunction, PaddleFactory paddleFactory,
@@ -33,6 +44,11 @@ public class ExtraPaddleCollisionStrategy extends BasicCollisionStrategy {
         this.extraPaddleCounter = extraPaddleCounter;
     }
 
+    /**
+     * Creates an extra paddle when a collision occurs.
+     * @param a The first object in the collision.
+     * @param b The second object in the collision.
+     */
     @Override
     public void onCollision(GameObject a, GameObject b) {
         super.onCollision(a, b);
@@ -46,7 +62,7 @@ public class ExtraPaddleCollisionStrategy extends BasicCollisionStrategy {
         extraPaddle.setOnCounterFinish(this::onCounterFinish);
     }
 
-    public void onCounterFinish() {
+    private void onCounterFinish() {
         this.removePaddleFunction.run(extraPaddle, Layer.DEFAULT);
         extraPaddleCounter.decrement();
     }

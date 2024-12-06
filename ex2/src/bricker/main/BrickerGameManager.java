@@ -23,6 +23,9 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 
+/**
+ * Class that manages the bricker game.
+ */
 public class BrickerGameManager extends GameManager {
     private static final int DEFAULT_NUMBER_OF_ROWS = 7;
     private static final int DEFAULT_NUMBER_OF_BRICKS_PER_ROW = 8;
@@ -38,12 +41,26 @@ public class BrickerGameManager extends GameManager {
     private UserInputListener inputListener;
 
 
+    /**
+     * Construct a new BrickerGameManager instance.
+     *
+     * @param windowTitle       Title of the window.
+     * @param windowDimensions  Width and height of the window.
+     * @param bricksPerRow      Number of bricks per row.
+     * @param brickRows         Number of brick rows.
+     */
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions, int bricksPerRow, int brickRows) {
         super(windowTitle, windowDimensions);
         this.bricksPerRow = bricksPerRow;
         this.brickRows = brickRows;
     }
 
+    /**
+     * Construct a new BrickerGameManager instance. Uses default values for bricks per row and brick rows.
+     *
+     * @param windowTitle      Title of the window.
+     * @param windowDimensions Width and height of the window.
+     */
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
         this(
                 windowTitle,
@@ -52,6 +69,14 @@ public class BrickerGameManager extends GameManager {
                 DEFAULT_NUMBER_OF_ROWS);
     }
 
+    /**
+     * Initialize the game.
+     *
+     * @param imageReader      ImageReader instance.
+     * @param soundReader      SoundReader instance.
+     * @param inputListener    UserInputListener instance.
+     * @param windowController WindowController instance.
+     */
     @Override
     public void initializeGame(ImageReader imageReader, SoundReader soundReader,
                                UserInputListener inputListener, WindowController windowController) {
@@ -80,6 +105,18 @@ public class BrickerGameManager extends GameManager {
         createBricks(imageReader, soundReader, bricksStrategyFactory);
 
         soundReader.readSound("assets/opening.wav").play();
+    }
+
+    /**
+     * Update the game state. Check for game end and remove fallen items.
+     *
+     * @param deltaTime Time elapsed since the last update.
+     */
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+        this.checkForGameEnd();
+        this.removeFallenItems();
     }
 
     private void createBricks(ImageReader imageReader, SoundReader soundReader, BricksStrategyFactory bricksStrategyFactory) {
@@ -139,14 +176,6 @@ public class BrickerGameManager extends GameManager {
         gameObjects().addGameObject(background, Layer.BACKGROUND);
     }
 
-
-    @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
-        this.checkForGameEnd();
-        this.removeFallenItems();
-    }
-
     private void removeFallenItems() {
         for (GameObject gameObject : gameObjects().objectsInLayer(Layer.DEFAULT)) {
             if (gameObject.getCenter().y() > this.windowDimensions.y() + DELETION_HEIGHT_THRESHOLD) {
@@ -195,6 +224,11 @@ public class BrickerGameManager extends GameManager {
     }
 
 
+    /**
+     * Main method.
+     *
+     * @param args Command line arguments.
+     */
     public static void main(String[] args) {
 
         int[] parsedArgs = parseArgs(args);

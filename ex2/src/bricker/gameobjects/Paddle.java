@@ -9,12 +9,13 @@ import bricker.paddle.PaddleType;
 
 import java.awt.event.KeyEvent;
 
-
+/**
+ * Represents a paddle object in the game.
+ */
 public class Paddle extends GameObject {
-    public static final float MOVEMENT_SPEED = 300;
+    private static final float MOVEMENT_SPEED = 300;
     private final UserInputListener inputListener;
     private final Vector2 windowDimensions;
-    public PaddleType paddleType = PaddleType.Main;
 
     /**
      * Construct a new GameObject instance.
@@ -34,6 +35,11 @@ public class Paddle extends GameObject {
         this.windowDimensions = windowDimensions;
     }
 
+    /**
+     * Update the object's state. Move the paddle according to the input received.
+     *
+     * @param deltaTime Time elapsed since the last update, in seconds.
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);

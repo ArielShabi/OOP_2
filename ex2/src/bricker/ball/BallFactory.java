@@ -10,7 +10,13 @@ import bricker.gameobjects.Ball;
 
 import java.util.Random;
 
+/**
+    * Factory class for creating balls.
+ **/
 public class BallFactory {
+    /**
+     * The speed of the ball.
+     */
     public static final float BALL_SPEED = 200;
     private static final float BALL_RADIUS = 35;
     private static final float PUCK_RADIUS_MULTIPLIER = 0.75f;
@@ -19,12 +25,22 @@ public class BallFactory {
     private final SoundReader soundReader;
     private final Random rand;
 
+    /**
+     * Constructor for the BallFactory.
+     * @param imageReader The image reader.
+     * @param soundReader The sound reader.
+     */
     public BallFactory(ImageReader imageReader, SoundReader soundReader) {
         this.imageReader = imageReader;
         this.soundReader = soundReader;
         this.rand = new Random();
     }
 
+    /**
+     * Creates a ball.
+     * @param ballType The type of the ball.
+     * @return The created ball.
+     */
     public Ball createBall(BallType ballType) {
         Renderable ballImage = null;
 

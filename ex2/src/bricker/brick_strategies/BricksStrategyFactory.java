@@ -15,6 +15,9 @@ import bricker.paddle.PaddleFactory;
 import java.util.Random;
 import java.util.function.Consumer;
 
+/**
+ * Factory class for creating collision strategies for bricks.
+ */
 public class BricksStrategyFactory {
     private static final int MAX_AMOUNT_OF_MULTI_COLLISIONS = 2;
     private final Random random;
@@ -29,6 +32,19 @@ public class BricksStrategyFactory {
     private final GameObject collectorObject;
     private final Ball mainBall;
 
+    /**
+     * Constructor for the factory.
+     *
+     * @param addBrickFunction         Function for adding a brick to the game.
+     * @param removeGameObjectFunction Function for removing a game object from the game.
+     * @param ballFactory              Factory for creating balls.
+     * @param paddleFactory            Factory for creating paddles.
+     * @param windowDimensions         Dimensions of the game window.
+     * @param imageReader              Reader for images.
+     * @param addHeartFunction         Function for adding a heart to the game.
+     * @param collectorObject          Object that collects collectables.
+     * @param mainBall                 Main ball of the game.
+     */
     public BricksStrategyFactory(AddGameObjectFunction addBrickFunction,
                                  RemoveGameObjectFunction removeGameObjectFunction,
                                  BallFactory ballFactory, PaddleFactory paddleFactory,
@@ -48,6 +64,12 @@ public class BricksStrategyFactory {
         extraPaddleCounter = new Counter(0);
     }
 
+    /**
+     * Generates a collision strategy for a brick.
+     *
+     * @param removeBrickFunction Function for removing a brick from the game.
+     * @return A collision strategy for a brick.
+     */
     public CollisionStrategy generateCollisionStrategy(Consumer<GameObject> removeBrickFunction) {
         boolean toCreteBasicStrategy = random.nextBoolean();
 
@@ -59,6 +81,13 @@ public class BricksStrategyFactory {
                 new Counter(MAX_AMOUNT_OF_MULTI_COLLISIONS));
     }
 
+    /**
+     * Generates a special collision strategy for a brick.
+     *
+     * @param removeBrickFunction Function for removing a brick from the game.
+     * @param multiCollisionCounter Counter for multi-collisions.
+     * @return A special collision strategy for a brick.
+     */
     public CollisionStrategy generateSpecialCollisionStrategy(Consumer<GameObject> removeBrickFunction,
                                                               Counter multiCollisionCounter) {
         boolean shouldIncludeMultiCollision = multiCollisionCounter.value() != 0;

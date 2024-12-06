@@ -6,6 +6,9 @@ import danogl.collisions.Collision;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
+/**
+ * Class representing a brick in the game.
+ */
 public class Brick extends GameObject {
     private final CollisionStrategy collisionStrategy;
 
@@ -23,6 +26,13 @@ public class Brick extends GameObject {
         this.collisionStrategy = collisionStrategy;
     }
 
+    /**
+     * Called when a collision occurs.
+     * @param other The GameObject with which a collision occurred.
+     * @param collision Information regarding this collision.
+     *                  A reasonable elastic behavior can be achieved with:
+     *                  setVelocity(getVelocity().flipped(collision.getNormal()));
+     */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);

@@ -11,6 +11,9 @@ import bricker.gameobjects.Collectable;
 
 import java.util.function.Consumer;
 
+/**
+ * A strategy that creates a collectable object when a collision occurs.
+ */
 public class CollectableCollisionStrategy extends BasicCollisionStrategy {
     private static final float MOVEMENT_SPEED = 100;
     private static final float COLLECTABLE_SIZE = 20;
@@ -21,6 +24,15 @@ public class CollectableCollisionStrategy extends BasicCollisionStrategy {
     private final GameObject collectorObject;
     private final RemoveGameObjectFunction removeCollectableFunction;
 
+    /**
+     * Constructor for the collectable collision strategy.
+     * @param removeGameObjectFunction The function to remove the game object.
+     * @param addGameObjectFunction The function to add a game object.
+     * @param removeCollectableFunction The function to remove a collectable object.
+     * @param renderable The renderable representing the object.
+     * @param collectedStrategy The strategy to be executed when the object is collected.
+     * @param collectorObject The object that collects the collectable.
+     */
     public CollectableCollisionStrategy(Consumer<GameObject> removeGameObjectFunction,
                                         AddGameObjectFunction addGameObjectFunction,
                                         RemoveGameObjectFunction removeCollectableFunction,
@@ -34,6 +46,11 @@ public class CollectableCollisionStrategy extends BasicCollisionStrategy {
         this.removeCollectableFunction = removeCollectableFunction;
     }
 
+    /**
+     * Creates a collectable object when a collision occurs.
+     * @param a The first object in the collision.
+     * @param b The second object in the collision.
+     */
     @Override
     public void onCollision(GameObject a, GameObject b) {
         super.onCollision(a, b);

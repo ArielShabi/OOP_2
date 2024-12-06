@@ -8,6 +8,9 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import bricker.gameobjects.Brick;
 
+/**
+ * Class that manages the bricks in the game.
+ */
 public class BricksManager {
     private static final float BRICK_HEIGHT = 15;
     private static final float BRICK_GAP = 2;
@@ -20,7 +23,7 @@ public class BricksManager {
     private int bricksCounter = 0;
 
     /**
-     * Construct a new GameObject instance.
+     * Construct a new BricksManager instance.
      *
      * @param topLeftCorner Position of the object, in window coordinates (pixel s). Note that (0,0) is the
      *                      top-left corner of the window.
@@ -38,6 +41,13 @@ public class BricksManager {
     }
 
 
+    /**
+     * Create bricks in the game.
+     *
+     * @param numberOfBricksPerRow Number of bricks per row.
+     * @param numberOfBrickRows    Number of brick rows.
+     * @param brickRenderable      The renderable representing the brick.
+     */
     public void createBricks(int numberOfBricksPerRow, int numberOfBrickRows, Renderable brickRenderable) {
         float brickWidth =
                 (this.bricksContainerDimensions.x() - ((numberOfBricksPerRow - 1) * BRICK_GAP)) / numberOfBricksPerRow;
@@ -61,6 +71,15 @@ public class BricksManager {
         }
     }
 
+    /**
+     * Check if there are bricks in the game.
+     *
+     * @return True if there are bricks in the game, false otherwise.
+     */
+    public boolean hasBricks() {
+        return bricksCounter > 0;
+    }
+
     private boolean removeBrick(GameObject gameObject) {
         boolean removed = removeGameObjectFunction.run(gameObject, Layer.STATIC_OBJECTS);
 
@@ -69,9 +88,5 @@ public class BricksManager {
         }
 
         return removed;
-    }
-
-    public boolean hasBricks() {
-        return bricksCounter > 0;
     }
 }
