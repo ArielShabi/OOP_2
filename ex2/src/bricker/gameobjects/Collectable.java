@@ -12,9 +12,9 @@ import bricker.game.RemoveGameObjectFunction;
  * Represents a collectable object in the game.
  */
 public class Collectable extends GameObject {
-    public final CollectedStrategy collectedStrategy;
+    private final CollectedStrategy collectedStrategy;
     private final RemoveGameObjectFunction removeCollectableFunction;
-    public final GameObject originalPaddle;
+    private final GameObject originalPaddle;
 
     /**
      * Construct a new Collectable instance.
