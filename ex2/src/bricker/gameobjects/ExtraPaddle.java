@@ -5,7 +5,6 @@ import danogl.collisions.Collision;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-import bricker.paddle.PaddleType;
 
 /**
  * Represents an extra paddle object in the game.

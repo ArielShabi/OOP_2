@@ -102,7 +102,7 @@ public class BrickerGameManager extends GameManager {
                 paddleFactory, windowDimensions, imageReader, heartsManager::addHeart, paddle,
                 this.ball);
 
-        createBricks(imageReader, soundReader, bricksStrategyFactory);
+        createBricks(imageReader, bricksStrategyFactory);
 
         soundReader.readSound("assets/opening.wav").play();
     }
@@ -119,7 +119,7 @@ public class BrickerGameManager extends GameManager {
         this.removeFallenItems();
     }
 
-    private void createBricks(ImageReader imageReader, SoundReader soundReader, BricksStrategyFactory bricksStrategyFactory) {
+    private void createBricks(ImageReader imageReader, BricksStrategyFactory bricksStrategyFactory) {
         Renderable brickRenderable = imageReader.readImage("assets/brick.png", false);
 
         bricksManager = new BricksManager(

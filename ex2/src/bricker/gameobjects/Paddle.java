@@ -5,7 +5,6 @@ import danogl.gui.UserInputListener;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import bricker.game.Config;
-import bricker.paddle.PaddleType;
 
 import java.awt.event.KeyEvent;
 
