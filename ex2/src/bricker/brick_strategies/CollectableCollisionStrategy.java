@@ -12,7 +12,7 @@ import bricker.gameobjects.Collectable;
 import java.util.function.Consumer;
 
 public class CollectableCollisionStrategy extends BasicCollisionStrategy {
-    private static final float MOVEMENT_SPEED = 200;
+    private static final float MOVEMENT_SPEED = 100;
     private static final float COLLECTABLE_SIZE = 20;
 
     private final AddGameObjectFunction addGameObjectFunction;
@@ -41,8 +41,7 @@ public class CollectableCollisionStrategy extends BasicCollisionStrategy {
         Collectable collectable = new Collectable(Vector2.ZERO, new Vector2(COLLECTABLE_SIZE, COLLECTABLE_SIZE),
                 renderable, collectedStrategy, removeCollectableFunction, collectorObject);
 
-        Vector2 collectablePosition = new Vector2(a.getCenter().x(), a.getCenter().y() + COLLECTABLE_SIZE); //to check
-        collectable.setCenter(collectablePosition);
+        collectable.setCenter(a.getCenter());
         collectable.setVelocity(Vector2.DOWN.mult(MOVEMENT_SPEED));
 
         this.addGameObjectFunction.run(collectable, Layer.DEFAULT);

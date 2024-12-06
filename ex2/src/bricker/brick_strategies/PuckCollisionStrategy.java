@@ -38,7 +38,5 @@ public class PuckCollisionStrategy extends BasicCollisionStrategy {
             ball.setCenter(puckPosition);
             this.addGameObjectFunction.run(ball, Layer.DEFAULT);
         }
-
-
     }
 }

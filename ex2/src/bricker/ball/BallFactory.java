@@ -26,7 +26,7 @@ public class BallFactory {
     }
 
     public Ball createBall(BallType ballType) {
-        Renderable ballImage =null;
+        Renderable ballImage = null;
 
         Sound collisionSound = soundReader.readSound("assets/blop.wav");
 

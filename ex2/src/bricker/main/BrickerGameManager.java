@@ -23,7 +23,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 
-public class BrickGameManager extends GameManager {
+public class BrickerGameManager extends GameManager {
     private static final int DEFAULT_NUMBER_OF_ROWS = 7;
     private static final int DEFAULT_NUMBER_OF_BRICKS_PER_ROW = 8;
     private static final float DELETION_HEIGHT_THRESHOLD = 30;
@@ -38,13 +38,13 @@ public class BrickGameManager extends GameManager {
     private UserInputListener inputListener;
 
 
-    public BrickGameManager(String windowTitle, Vector2 windowDimensions, int bricksPerRow, int brickRows) {
+    public BrickerGameManager(String windowTitle, Vector2 windowDimensions, int bricksPerRow, int brickRows) {
         super(windowTitle, windowDimensions);
         this.bricksPerRow = bricksPerRow;
         this.brickRows = brickRows;
     }
 
-    public BrickGameManager(String windowTitle, Vector2 windowDimensions) {
+    public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
         this(
                 windowTitle,
                 windowDimensions,
@@ -200,14 +200,14 @@ public class BrickGameManager extends GameManager {
         int[] parsedArgs = parseArgs(args);
         GameManager game;
         if (parsedArgs != null) {
-            game = new BrickGameManager(
+            game = new BrickerGameManager(
                     "Bouncing Ball",
                     new Vector2(700, 500),
                     parsedArgs[0],
                     parsedArgs[1]
             );
         } else {
-            game = new BrickGameManager("Bouncing Ball", new Vector2(700, 500));
+            game = new BrickerGameManager("Bouncing Ball", new Vector2(700, 500));
         }
 
 
