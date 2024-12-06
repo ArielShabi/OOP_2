@@ -70,7 +70,7 @@ public class BrickerGameManager extends GameManager {
         createBall(ballFactory);
 
         PaddleFactory paddleFactory = new PaddleFactory(imageReader, inputListener, windowDimensions);
-        GameObject paddle = cretePaddle(paddleFactory);
+        GameObject paddle = createPaddle(paddleFactory);
 
         BricksStrategyFactory bricksStrategyFactory = new BricksStrategyFactory(
                 this.gameObjects()::addGameObject, this.gameObjects()::removeGameObject, ballFactory,
@@ -78,6 +78,8 @@ public class BrickerGameManager extends GameManager {
                 this.ball);
 
         createBricks(imageReader, soundReader, bricksStrategyFactory);
+
+        soundReader.readSound("assets/opening.wav").play();
     }
 
     private void createBricks(ImageReader imageReader, SoundReader soundReader, BricksStrategyFactory bricksStrategyFactory) {
@@ -93,11 +95,9 @@ public class BrickerGameManager extends GameManager {
         );
 
         bricksManager.createBricks(this.bricksPerRow, this.brickRows, brickRenderable);
-
-        soundReader.readSound("assets/opening.wav").play();
     }
 
-    private GameObject cretePaddle(PaddleFactory paddleFactory) {
+    private GameObject createPaddle(PaddleFactory paddleFactory) {
         GameObject paddle = paddleFactory.createPaddle(PaddleType.Main);
         paddle.setCenter(new Vector2(windowDimensions.x() / 2, (int) windowDimensions.y() - 30));
         gameObjects().addGameObject(paddle);
