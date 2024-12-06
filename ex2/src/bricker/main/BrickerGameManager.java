@@ -12,7 +12,6 @@ import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import bricker.game.BricksManager;
-import bricker.game.Config;
 import bricker.game.HeartsManager;
 import bricker.game.Utils;
 import bricker.gameobjects.Ball;
@@ -30,7 +29,7 @@ public class BrickerGameManager extends GameManager {
     private static final int DEFAULT_NUMBER_OF_ROWS = 7;
     private static final int DEFAULT_NUMBER_OF_BRICKS_PER_ROW = 8;
     private static final float DELETION_HEIGHT_THRESHOLD = 30;
-    public static final int ARGS_LENGTH = 2;
+    private static final int ARGS_LENGTH = 2;
     private final int bricksPerRow;
     private final int brickRows;
     private Ball ball;
@@ -44,12 +43,8 @@ public class BrickerGameManager extends GameManager {
     private static final String LOSE_PROMPT = "You lose!";
     private static final String WIN_PROMPT = "You win!";
     private static final String PLAY_AGAIN_PROMPT = " Play again?";
-    private static final float WINDOWX_X_DIMENSIONS = 700;
-    private static final float WINDOWX_Y_DIMENSIONS = 500;
-
-
-
-
+    private static final float WINDOWX_X_DIMENSIONS = 1500;
+    private static final float WINDOWX_Y_DIMENSIONS = 800;
 
     /**
      * Construct a new BrickerGameManager instance.
@@ -130,7 +125,7 @@ public class BrickerGameManager extends GameManager {
     }
 
     private void createBricks(ImageReader imageReader, BricksStrategyFactory bricksStrategyFactory) {
-        Renderable brickRenderable = imageReader.readImage("assets/brick.png", false);
+        Renderable brickRenderable = imageReader.readImage(AssetsConfig.BRICK_PATH, false);
 
         bricksManager = new BricksManager(
                 new Vector2(Config.WALL_WIDTH, Config.WALL_WIDTH),

@@ -1,5 +1,6 @@
 package bricker.game;
 
+import bricker.main.AssetsConfig;
 import danogl.GameObject;
 import danogl.collisions.Layer;
 import danogl.gui.ImageReader;
@@ -68,7 +69,7 @@ public class HeartsManager {
      */
     public void addHeart() {
         if (heartsCounter < MAX_HEARTS) {
-            Renderable heartRenderable = imageReader.readImage("assets/heart.png", true);
+            Renderable heartRenderable = imageReader.readImage(AssetsConfig.HEART_PATH, true);
             GameObject heart = new GameObject(Vector2.ZERO, new Vector2(HEART_SIZE, HEART_SIZE),
                     heartRenderable);
             heart.setCenter(new Vector2(4 * HEART_SIZE + this.heartsCounter * HEART_SIZE,
