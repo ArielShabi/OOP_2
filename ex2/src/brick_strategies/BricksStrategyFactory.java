@@ -62,6 +62,7 @@ public class BricksStrategyFactory {
     public CollisionStrategy generateSpecialCollisionStrategy(Consumer<GameObject> removeBrickFunction,
                                                               Counter multiCollisionCounter) {
         boolean shouldIncludeMultiCollision = multiCollisionCounter.value() != 0;
+
         int chance = random.nextInt(CollisionStrategyType.values().length -
                 (shouldIncludeMultiCollision ?
                         0 : 1));

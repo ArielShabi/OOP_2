@@ -22,9 +22,9 @@ import java.awt.event.KeyEvent;
 
 
 public class BrickGameManager extends GameManager {
-    private static final int DEFAULT_NUMBER_OF_BRICK_ROWS = 6;
-    private static final int DEFAULT_NUMBER_OF_BRICKS_PER_ROW = 5;
-    private static final float DELETION_HEIGHT_THRESHOLD = 50;
+    private static final int DEFAULT_NUMBER_OF_ROWS = 7;
+    private static final int DEFAULT_NUMBER_OF_BRICKS_PER_ROW = 8;
+    private static final float DELETION_HEIGHT_THRESHOLD = 30;
     public static final int ARGS_LENGTH = 2;
     private final int bricksPerRow;
     private final int brickRows;
@@ -47,7 +47,7 @@ public class BrickGameManager extends GameManager {
                 windowTitle,
                 windowDimensions,
                 DEFAULT_NUMBER_OF_BRICKS_PER_ROW,
-                DEFAULT_NUMBER_OF_BRICK_ROWS);
+                DEFAULT_NUMBER_OF_ROWS);
     }
 
     @Override
@@ -60,16 +60,56 @@ public class BrickGameManager extends GameManager {
         this.heartsManager = new HeartsManager(this.gameObjects()::removeGameObject,
                 this.gameObjects()::addGameObject, imageReader, windowDimensions);
 
-        // Create background
-        Renderable backgroundImage = imageReader.readImage("assets/DARK_BG2_small.jpeg"
-                , false);
-        GameObject background = new GameObject(Vector2.ZERO, this.windowDimensions,
-                backgroundImage);
-        background.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
-        gameObjects().addGameObject(background, Layer.BACKGROUND);
+        createBackground(imageReader);
 
+        createWalls();
 
-        // Create walls
+        BallFactory ballFactory = new BallFactory(imageReader, soundReader);
+        createBall(ballFactory);
+
+        PaddleFactory paddleFactory = new PaddleFactory(imageReader, inputListener, windowDimensions);
+        GameObject paddle = cretePaddle(paddleFactory);
+
+        BricksStrategyFactory bricksStrategyFactory = new BricksStrategyFactory(
+                this.gameObjects()::addGameObject, this.gameObjects()::removeGameObject, ballFactory,
+                paddleFactory, windowDimensions, imageReader, heartsManager::addHeart, paddle,
+                this.ball);
+
+        createBricks(imageReader, soundReader, bricksStrategyFactory);
+    }
+
+    private void createBricks(ImageReader imageReader, SoundReader soundReader, BricksStrategyFactory bricksStrategyFactory) {
+        Renderable brickRenderable = imageReader.readImage("assets/brick.png", false);
+
+        bricksManager = new BricksManager(
+                new Vector2(Config.WALL_WIDTH, Config.WALL_WIDTH),
+                new Vector2(windowDimensions.x() - 2 * Config.WALL_WIDTH,
+                        windowDimensions.y() - 2 * Config.WALL_WIDTH),
+                this.gameObjects()::addGameObject,
+                this.gameObjects()::removeGameObject,
+                bricksStrategyFactory
+        );
+
+        bricksManager.createBricks(this.bricksPerRow, this.brickRows, brickRenderable);
+
+        soundReader.readSound("assets/opening.wav").play();
+    }
+
+    private GameObject cretePaddle(PaddleFactory paddleFactory) {
+        GameObject paddle = paddleFactory.createPaddle(PaddleType.Main);
+        paddle.setCenter(new Vector2(windowDimensions.x() / 2, (int) windowDimensions.y() - 30));
+        gameObjects().addGameObject(paddle);
+        return paddle;
+    }
+
+    private void createBall(BallFactory ballFactory) {
+        ball = ballFactory.createBall(BallType.MAIN);
+        this.resetBallPosition();
+
+        gameObjects().addGameObject(ball);
+    }
+
+    private void createWalls() {
         Renderable wallRenderable = new RectangleRenderable(Color.pink);
         Vector2[] wallPositions = {Vector2.ZERO,
                 new Vector2(this.windowDimensions.x() - Config.WALL_WIDTH, 0)};
@@ -86,43 +126,15 @@ public class BrickGameManager extends GameManager {
                 new Vector2(this.windowDimensions.x(), Config.WALL_WIDTH), wallRenderable);
 
         this.gameObjects().addGameObject(ceiling, Layer.STATIC_OBJECTS);
+    }
 
-
-        // Creating ball
-        BallFactory ballFactory = new BallFactory(imageReader, soundReader);
-
-        ball = ballFactory.createBall(BallType.MAIN);
-        this.resetBallPosition();
-
-        gameObjects().addGameObject(ball);
-
-        // Creating paddle
-        PaddleFactory paddleFactory = new PaddleFactory(imageReader, inputListener, windowDimensions);
-        GameObject paddle = paddleFactory.createPaddle(PaddleType.Main);
-        paddle.setCenter(new Vector2(windowDimensions.x() / 2, (int) windowDimensions.y() - 30));
-        gameObjects().addGameObject(paddle);
-
-
-        // create bricks
-        Renderable brickRenderable = imageReader.readImage("assets/brick.png", false);
-
-        BricksStrategyFactory bricksStrategyFactory = new BricksStrategyFactory(
-                this.gameObjects()::addGameObject, this.gameObjects()::removeGameObject, ballFactory,
-                paddleFactory, windowDimensions, imageReader, heartsManager::addHeart, paddle,
-                this.ball);
-
-        bricksManager = new BricksManager(
-                new Vector2(Config.WALL_WIDTH, Config.WALL_WIDTH),
-                new Vector2(windowDimensions.x() - 2 * Config.WALL_WIDTH,
-                        windowDimensions.y() - 2 * Config.WALL_WIDTH),
-                this.gameObjects()::addGameObject,
-                this.gameObjects()::removeGameObject,
-                bricksStrategyFactory
-        );
-
-        bricksManager.createBricks(this.bricksPerRow, this.brickRows, brickRenderable);
-
-        soundReader.readSound("assets/opening.wav").play();
+    private void createBackground(ImageReader imageReader) {
+        Renderable backgroundImage = imageReader.readImage("assets/DARK_BG2_small.jpeg"
+                , false);
+        GameObject background = new GameObject(Vector2.ZERO, this.windowDimensions,
+                backgroundImage);
+        background.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
+        gameObjects().addGameObject(background, Layer.BACKGROUND);
     }
 
 
@@ -166,7 +178,6 @@ public class BrickGameManager extends GameManager {
                 windowController.closeWindow();
             }
         }
-
     }
 
     private boolean checkForWin() {
@@ -200,7 +211,7 @@ public class BrickGameManager extends GameManager {
 
         game.run();
 
-        System.out.println("Hello World" + game);
+
     }
 
     private static int[] parseArgs(String[] args) {

@@ -39,7 +39,6 @@ public class Collectable extends GameObject {
         removeCollectableFunction.run(this, Layer.DEFAULT);
     }
 
-    // collide only with original paddle
     @Override
     public boolean shouldCollideWith(GameObject other) {
         return other == originalPaddle;
