@@ -108,8 +108,6 @@ public class BrickerGameManager extends GameManager {
                 this.ball);
 
         createBricks(imageReader, bricksStrategyFactory);
-
-        soundReader.readSound(AssetsConfig.OPENING_PATH).play();
     }
 
     /**
