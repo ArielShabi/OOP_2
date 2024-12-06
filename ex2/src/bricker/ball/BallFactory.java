@@ -1,5 +1,6 @@
 package bricker.ball;
 
+import bricker.main.AssetsConfig;
 import danogl.gui.ImageReader;
 import danogl.gui.Sound;
 import danogl.gui.SoundReader;
@@ -28,7 +29,7 @@ public class BallFactory {
     public Ball createBall(BallType ballType) {
         Renderable ballImage = null;
 
-        Sound collisionSound = soundReader.readSound("assets/blop.wav");
+        Sound collisionSound = soundReader.readSound(AssetsConfig.BLOP_SOUND_PATH);
 
         float ballRadius = BALL_RADIUS;
 
@@ -36,14 +37,14 @@ public class BallFactory {
         Vector2 ballVelocity = null;
         if (ballType == BallType.MAIN) {
             ballVelocity = Utils.getRandomDiagonal();
-            ballImage = imageReader.readImage("assets/ball.png", true);
+            ballImage = imageReader.readImage(AssetsConfig.BALL_PATH, true);
         } else if (ballType == BallType.PUCK) {
             ballRadius *= PUCK_RADIUS_MULTIPLIER;
             double angle = rand.nextFloat() * Math.PI;
             float ballVelocityX = (float) (Math.cos(angle));
             float ballVelocityY = (float) (Math.sin(angle));
             ballVelocity = new Vector2(ballVelocityX, ballVelocityY);
-            ballImage = imageReader.readImage("assets/mockBall.png", true);
+            ballImage = imageReader.readImage(AssetsConfig.PUCK_BALL_PATH, true);
         }
 
 

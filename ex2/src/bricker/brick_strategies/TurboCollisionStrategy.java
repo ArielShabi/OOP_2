@@ -1,6 +1,7 @@
 package bricker.brick_strategies;
 
 import bricker.components.BallCollisionCounterComponent;
+import bricker.main.AssetsConfig;
 import danogl.GameObject;
 import danogl.gui.ImageReader;
 import danogl.gui.rendering.Renderable;
@@ -18,7 +19,7 @@ public class TurboCollisionStrategy extends BasicCollisionStrategy {
     public TurboCollisionStrategy(Consumer<GameObject> removeGameObjectFunction,
                                   Ball ballToTurbo, ImageReader imageReader) {
         super(removeGameObjectFunction);
-        turboRenderable = imageReader.readImage("assets/redball.png", true);
+        turboRenderable = imageReader.readImage(AssetsConfig.TURBO_BALL_PATH, true);
         this.ballToTurbo = ballToTurbo;
     }
 

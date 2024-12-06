@@ -1,5 +1,6 @@
 package bricker.paddle;
 
+import bricker.main.AssetsConfig;
 import danogl.gui.ImageReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.rendering.Renderable;
@@ -24,7 +25,7 @@ public class PaddleFactory {
 
     public Paddle createPaddle(PaddleType paddleType) {
         Renderable paddleImage =
-                imageReader.readImage("assets/paddle.png", false);
+                imageReader.readImage(AssetsConfig.PADDLE_PATH, false);
         if (paddleType == PaddleType.Main) {
             return new Paddle(topLeftCorner, new Vector2(PADDLE_WIDTH, PADDLE_HEIGHT), paddleImage,
                     inputListener, windowDimensions);
