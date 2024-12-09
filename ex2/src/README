@@ -91,6 +91,9 @@ yael_weiss,ariel.shabi6
                                             written in the instruction and in our game (you can
                                             easily change the chances to get every brick collision strategy in
                                             BricksCollisionStrategyFactory class).
+                                          **We added hamburgers picture to assets folder, but it didn't pass
+                                          the presubmit check, so we changed it to a different picture
+                                          that we found in assets folder.
 
 4)         3.8 Class: MultiCollisionStrategy - Class that implements CollisionStrategy and inherited from
                                           BasicCollisionStrategy.

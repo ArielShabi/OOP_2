@@ -19,7 +19,6 @@ public class BricksManager {
     private final BricksStrategyFactory bricksStrategyFactory;
     private final Vector2 topLeftCorner;
     private final Vector2 bricksContainerDimensions;
-
     private int bricksCounter = 0;
 
     /**
