@@ -62,7 +62,7 @@ public class BricksManager {
                         new Vector2(brickWidth, BRICK_HEIGHT),
                         brickRenderable,
                         brickCollisionStrategy
-                        );
+                );
 
                 bricksCounter++;
                 addBrickFunction.run(brick, Layer.STATIC_OBJECTS);
@@ -79,13 +79,11 @@ public class BricksManager {
         return bricksCounter > 0;
     }
 
-    private boolean removeBrick(GameObject gameObject) {
+    private void removeBrick(GameObject gameObject) {
         boolean removed = removeGameObjectFunction.run(gameObject, Layer.STATIC_OBJECTS);
 
         if (removed) {
             bricksCounter--;
         }
-
-        return removed;
     }
 }
